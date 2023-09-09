@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\RhythmicJourney.Application\RhythmicJourney.Application.csproj" />
+    <ProjectReference Include="..\..\external\RhythmicJourney.Infrastructure\RhythmicJourney.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\external\RhythmicJourney.Persistence\RhythmicJourney.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>
