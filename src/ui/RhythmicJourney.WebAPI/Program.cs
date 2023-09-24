@@ -1,25 +1,29 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
+using RhythmicJourney.WebAPI.Extensions;
+using RhythmicJourney.Application.Extensions;
+using RhythmicJourney.Persistence.Extensions;
+using RhythmicJourney.Infrastructure.Extensions;
 
-namespace RhythmicJourney.WebAPI
+namespace RhythmicJourney.WebAPI;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            builder.Services.AddControllers();
-            builder.Services.AddSwaggerGen();
-
-            var app = builder.Build();
-
-            if(app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); }
-            app.UseHttpsRedirection();
-            app.MapControllers();
-
-            app.Run();
+            builder.Services
+                .RegisterApplicationServices()
+                .RegisterInfrastructureServices()
+                .RegisterPersistenceServices(builder.Configuration)
+                .RegisterUIServices();
         }
+
+        var app = builder.Build();
+        {
+            app.AddMiddlewares();
+        }
+
+        app.Run();
     }
 }
