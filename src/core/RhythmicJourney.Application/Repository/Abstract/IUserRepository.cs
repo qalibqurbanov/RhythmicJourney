@@ -11,5 +11,6 @@ public interface IUserRepository
 {
     Task<AppUser?> GetUserByEmailAsync(string email);
     Task<IdentityResult> CreateUserAsync(AppUser user, string password);
-    Task<SignInResult> SignIn(string email, string password);
+    Task<AppUser?> GetUserByRefreshToken(string refreshToken);
+    int Update(AppUser user);
 }

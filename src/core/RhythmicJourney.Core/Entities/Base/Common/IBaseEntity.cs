@@ -1,4 +1,4 @@
-﻿namespace RhythmicJourney.Core.Entities.Base;
+﻿namespace RhythmicJourney.Core.Entities.Base.Common;
 
 /// <summary>
 /// Kimliyi olan entitylerin base tipidir.

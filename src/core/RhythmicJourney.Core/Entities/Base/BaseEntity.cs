@@ -1,14 +1,16 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
+using RhythmicJourney.Core.Entities.Base.Common;
 
 namespace RhythmicJourney.Core.Entities.Base;
 
 /// <summary>
 /// Kimliyi olan entitylere lazimi ozellikleri qazandiran base tipdir.
 /// </summary>
-public abstract class BaseEntity : IdentityUser<int>, IBaseEntity, IAuditEntity
+public abstract class BaseEntity : IdentityUser<int>, /*IBaseEntity, */ICustomEntity, IAuditEntity
 {
-    public override int Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
 
     public DateTime CreatedDate { get; set; }
     public DateTime UpdatedDate { get; set; }

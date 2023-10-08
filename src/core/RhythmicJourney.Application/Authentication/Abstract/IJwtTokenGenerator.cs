@@ -2,7 +2,11 @@
 
 namespace RhythmicJourney.Application.Authentication.Abstract;
 
-public interface IJwtTokenGenerator
+/// <summary>
+/// 'Access Token' ve 'Refresh Token' generasiya eden funksionalliqlarin imzalarini saxlayir.
+/// </summary>
+public interface ITokenGenerator
 {
-    string GenerateToken(AppUser user);
+    string GenerateAccessToken(AppUser user);
+    RefreshToken GenerateRefreshToken();
 }

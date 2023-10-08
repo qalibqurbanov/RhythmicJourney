@@ -14,8 +14,8 @@ public class Program
         {
             builder.Services
                 .RegisterApplicationServices()
-                .RegisterInfrastructureServices()
                 .RegisterPersistenceServices(builder.Configuration)
+                .RegisterInfrastructureServices()
                 .RegisterUIServices();
         }
 

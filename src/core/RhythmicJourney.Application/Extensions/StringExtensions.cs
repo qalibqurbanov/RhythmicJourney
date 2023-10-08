@@ -1,5 +1,8 @@
 ﻿namespace RhythmicJourney.Application.Extensions;
 
+/// <summary>
+/// 'System.String' ucun yazilmiw custom extension metodlari saxlayir.
+/// </summary>
 public static class StringExtensions
 {
     /// <summary>
@@ -9,7 +12,13 @@ public static class StringExtensions
     /// <returns>string bowdursa 'true', eks halda 'false' dondurur.</returns>
     public static bool IsEmpty(this string sourceString)
     {
-        if (string.IsNullOrEmpty(sourceString) || string.IsNullOrWhiteSpace(sourceString)) return true;
-        else return false;
+        if (string.IsNullOrEmpty(sourceString) || string.IsNullOrWhiteSpace(sourceString))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

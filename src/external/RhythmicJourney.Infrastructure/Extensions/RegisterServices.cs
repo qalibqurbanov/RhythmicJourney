@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RhythmicJourney.Infrastructure.Authentication;
 using RhythmicJourney.Application.Authentication.Abstract;
+using RhythmicJourney.Infrastructure.Authentication.Concrete;
 
 namespace RhythmicJourney.Infrastructure.Extensions;
 
@@ -11,8 +11,9 @@ public static class RegisterServices
     /// </summary>
     public static IServiceCollection RegisterInfrastructureServices(this IServiceCollection services)
     {
-        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-
+        services.AddScoped<ITokenGenerator, TokenGenerator>();
+        services.AddScoped<IRefreshTokenValidator, RefreshTokenValidator>();
+        
         return services;
     }
 }

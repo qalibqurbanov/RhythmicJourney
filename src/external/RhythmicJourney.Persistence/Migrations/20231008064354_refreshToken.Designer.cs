@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RhythmicJourney.Persistence.Contexts;
 
@@ -11,9 +12,11 @@ using RhythmicJourney.Persistence.Contexts;
 namespace RhythmicJourney.Persistence.Migrations
 {
     [DbContext(typeof(RhythmicJourneyIdentityDbContext))]
-    partial class RhythmicJourneyIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231008064354_refreshToken")]
+    partial class refreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

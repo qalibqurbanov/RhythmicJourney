@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace RhythmicJourney.Core.Entities.Base;
+namespace RhythmicJourney.Core.Entities.Base.Common;
 
 /// <summary>
-/// Audit meqsedile iwledilecek olan ozellikleri saxlayir.
+/// Audit meqsedile iwledilecek olan ozellikleri saxlayan base tipdir.
 /// </summary>
 public interface IAuditEntity
 {
