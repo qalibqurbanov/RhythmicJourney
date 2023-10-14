@@ -7,7 +7,7 @@ namespace RhythmicJourney.Core.Entities.Base;
 /// <summary>
 /// Kimliyi olan entitylere lazimi ozellikleri qazandiran base tipdir.
 /// </summary>
-public abstract class BaseEntity : IdentityUser<int>, /*IBaseEntity, */ICustomEntity, IAuditEntity
+public abstract class BaseEntity : IdentityUser<int>, IBaseEntity, ICustomEntity, IAuditEntity
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

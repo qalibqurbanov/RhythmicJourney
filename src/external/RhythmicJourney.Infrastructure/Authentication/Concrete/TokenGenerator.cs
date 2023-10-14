@@ -32,9 +32,7 @@ public class TokenGenerator : ITokenGenerator
 
         Claim[] claims = new Claim[] /* 'issuer' ve 'audience' claimleri burada yox awagidaki 'JwtSecurityToken' konfiqurasiyasi zamani set edilir. Cunki bu Claim biz elave etmesek bele ozu avtomatik elave olunur Access Tokene. */
         {
-            // new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), /* Userin elinde olan Access Tokenin ozunun ID-sidir */
-
-            new Claim("UserID", user.Id.ToString()), /* Claimin adi/tipi olaraq "UserID" yerine "ClaimTypes.NameIdentifier"-da demek olardi */
+            new Claim("UserID", user.Id.ToString()), /* Claimin adi/tipi olaraq custom ad("UserID") demek yerine "ClaimTypes.NameIdentifier"-da demek olardi */
             new Claim(ClaimTypes.Name, user.Email),
             new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()), /* Hazirki tarixi UTC-ye cevirib yaziriq */
             new Claim(JwtRegisteredClaimNames.Sub, $"{user.FirstName} {user.LastName}"),

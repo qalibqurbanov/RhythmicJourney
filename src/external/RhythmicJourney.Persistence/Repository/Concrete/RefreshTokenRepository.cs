@@ -16,21 +16,37 @@ public class RefreshTokenRepository : IRefreshTokenRepository
 
     public int Add(AppUser user, RefreshToken refreshToken)
     {
-        var userFromDb = _identityDbContext.Users.FirstOrDefault(u => u.Id == user.Id);
+        AppUser userFromDb = _identityDbContext.Users.FirstOrDefault(u => u.Id == user.Id);
 
         if (userFromDb != null)
         {
-            { /* Ilk once userin movcud Refresh Tokenlerini revoke/deaktiv edirik: */
-                foreach (RefreshToken rt in userFromDb.RefreshTokens)
-                {
-                    rt.IsActive = false;
-                    rt.RevokedOn = DateTime.UtcNow;
-                }
-            }
+            userFromDb.RefreshTokens.Add(refreshToken);
+        }
 
-            { /* Usere yeni bir Refresh Token veririk. */
-                userFromDb.RefreshTokens.Add(refreshToken);
-                _identityDbContext.Users.Update(userFromDb);
+        return _identityDbContext.SaveChanges();
+    }
+
+    public int RevokeOldAndExpiredRefreshTokens(AppUser user, string refreshTokenToRevoke)
+    {
+        /* Ilk once uzerinde iw goreceyimiz useri elde edirik: */
+        AppUser userFromDb = _identityDbContext.Users.FirstOrDefault(u => u.Id == user.Id);
+
+        { /* "/renew-tokens" endpointimize hansi Refresh Token ile request edilmiwdise hemin Refresh Tokeni revoke/deaktiv edirik: */
+            RefreshToken RT = userFromDb.RefreshTokens.FirstOrDefault(u => u.Token == refreshTokenToRevoke);
+            {
+                RT.IsActive = false;
+                RT.RevokedOn = DateTime.UtcNow;
+            }
+        }
+
+        { /* Userin her ugurlu logini zamani usere Access Token-le yanawi hem de yeni bir Refresh Token verirem ve bu Refresh Tokenler bir muddet sonra DB-da yigilib qalacaq. Bu sebeble omru qurtarmiw Refresh Tokenleri ilk once burada deaktiv edirem (+ lakin daha sonra mueyyen intervalla DB-da olu Refresh Tokenleri temizlemek lazimdir). */
+            foreach (RefreshToken RT in userFromDb.RefreshTokens)
+            {
+                if (DateTime.UtcNow >= RT.ExpiresOn)
+                {
+                    RT.IsActive = false;
+                    RT.RevokedOn = DateTime.UtcNow;
+                }
             }
         }
 

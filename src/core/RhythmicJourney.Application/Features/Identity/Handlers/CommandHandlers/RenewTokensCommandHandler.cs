@@ -65,7 +65,7 @@ public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, Aut
             }
         }
 
-        RefreshToken existingRefreshToken = userFromDb.RefreshTokens.First(t => t.Token.Equals(request.RefreshToken));
+        RefreshToken existingRefreshToken = userFromDb.RefreshTokens.FirstOrDefault(t => t.Token.Equals(request.RefreshToken));
         {
             if (existingRefreshToken == null)
             {
@@ -79,13 +79,9 @@ public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, Aut
                     return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_EXPIRED } });
                 }
 
-                { /* Userin sahib oldugu Refresh Tokenin omru qurtarmamiw idise bu zaman ilk once sahib oldugu hemin Refresh Tokeni revoke/deaktiv edirik: */
+                { /* Ilk once userin hazirki Refresh Tokenini revoke edirik, ardinca ise Usere yeni bir Access ve Refresh Token generate ederek DB-ya qeyd edirik, ardinca ise dondururuk cliente. */
+                    _refreshTokenRepository.RevokeOldAndExpiredRefreshTokens(userFromDb, request.RefreshToken);
 
-                    existingRefreshToken.IsActive = false;
-                    existingRefreshToken.RevokedOn = DateTime.UtcNow;
-                }
-
-                { /* User ucun yeni bir Access ve Refresh Token generate edirik ve dondururuk cliente. Burada hemde generate etdiyimiz hemin bu Refresh Tokeni DB-ya qeyd edirik: */
                     RefreshToken RT = _tokenGenerator.GenerateRefreshToken();
                     _refreshTokenRepository.Add(userFromDb, RT);
 

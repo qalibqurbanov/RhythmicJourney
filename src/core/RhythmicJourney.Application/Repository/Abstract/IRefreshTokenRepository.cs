@@ -8,4 +8,5 @@ namespace RhythmicJourney.Application.Repository.Abstract;
 public interface IRefreshTokenRepository
 {
     int Add(AppUser user, RefreshToken refreshToken);
+    int RevokeOldAndExpiredRefreshTokens(AppUser user, string refreshTokenToRevoke);
 }
