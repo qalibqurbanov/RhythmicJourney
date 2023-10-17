@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MediatR;
+using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
+using RhythmicJourney.Application.PipelineBehaviors;
+using RhythmicJourney.Application.Features.Identity.Validators;
 using RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 
 namespace RhythmicJourney.Application.Extensions;
@@ -16,6 +20,9 @@ public static class RegisterServices
 
             cfg.RegisterServicesFromAssembly(typeof(LoginQueryHandler).Assembly);
         });
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
+
+        services.AddValidatorsFromAssembly(typeof(LoginQueryValidator).Assembly);
 
         services.AddHttpContextAccessor();
 

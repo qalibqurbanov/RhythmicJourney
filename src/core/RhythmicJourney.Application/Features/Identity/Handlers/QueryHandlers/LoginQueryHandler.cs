@@ -9,7 +9,6 @@ using RhythmicJourney.Persistence.Repository.Abstract;
 using RhythmicJourney.Application.Authentication.Abstract;
 using RhythmicJourney.Application.Features.Identity.Common;
 using RhythmicJourney.Application.Features.Identity.Queries;
-using System;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 
