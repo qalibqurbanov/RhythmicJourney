@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RhythmicJourney.Persistence.Contexts;
 using RhythmicJourney.Core.Entities.Identity;
-using RhythmicJourney.Persistence.Repository.Abstract;
+using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions;
 
-namespace RhythmicJourney.Persistence.Repository.Concrete;
+namespace RhythmicJourney.Persistence.Repositories.Concretes;
 
 /// <summary>
 /// Istifadeci/Istifadeciler ile elaqeli funksionalliqlari saxlayir.

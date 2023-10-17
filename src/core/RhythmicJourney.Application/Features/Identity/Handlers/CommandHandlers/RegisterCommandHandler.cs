@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using RhythmicJourney.Core.Entities.Identity;
-using RhythmicJourney.Persistence.Repository.Abstract;
 using RhythmicJourney.Application.Features.Identity.Common;
 using RhythmicJourney.Application.Features.Identity.Commands;
+using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.CommandHandlers;
 

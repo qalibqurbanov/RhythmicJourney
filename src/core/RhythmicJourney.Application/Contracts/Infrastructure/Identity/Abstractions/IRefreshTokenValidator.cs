@@ -1,6 +1,4 @@
-﻿using RhythmicJourney.Application.Features.Identity.Common;
-
-namespace RhythmicJourney.Application.Authentication.Abstract;
+﻿namespace RhythmicJourney.Application.Contracts.Infrastructure.Identity.Abstractions;
 
 /// <summary>
 /// 'Refresh Token'-i validasiyadan kecirmek ucun lazimi funksionalliqlarin imzalarini saxlayir.

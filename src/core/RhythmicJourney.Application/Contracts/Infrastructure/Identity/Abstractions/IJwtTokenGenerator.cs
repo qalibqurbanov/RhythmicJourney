@@ -1,6 +1,6 @@
 ﻿using RhythmicJourney.Core.Entities.Identity;
 
-namespace RhythmicJourney.Application.Authentication.Abstract;
+namespace RhythmicJourney.Application.Contracts.Infrastructure.Identity.Abstractions;
 
 /// <summary>
 /// 'Access Token' ve 'Refresh Token' generasiya eden funksionalliqlarin imzalarini saxlayir.

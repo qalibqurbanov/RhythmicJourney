@@ -1,6 +1,6 @@
 ﻿using RhythmicJourney.Core.Entities.Identity;
 
-namespace RhythmicJourney.Application.Repository.Abstract;
+namespace RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions;
 
 /// <summary>
 /// Refresh Token ile elaqeli emeliyyatlarin imzalarini saxlayir.

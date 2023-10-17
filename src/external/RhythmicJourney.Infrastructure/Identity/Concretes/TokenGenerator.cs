@@ -4,10 +4,10 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using RhythmicJourney.Core.Entities.Identity;
-using RhythmicJourney.Application.Authentication.Abstract;
-using RhythmicJourney.Application.Authentication.Entities;
+using RhythmicJourney.Application.Models;
+using RhythmicJourney.Application.Contracts.Infrastructure.Identity.Abstractions;
 
-namespace RhythmicJourney.Infrastructure.Authentication.Concrete;
+namespace RhythmicJourney.Infrastructure.Identity.Concretes;
 
 /// <summary>
 /// 'Access Token' ve 'Refresh Token' generasiya eden funksionalliqlarin implementasiyalarini saxlayir.

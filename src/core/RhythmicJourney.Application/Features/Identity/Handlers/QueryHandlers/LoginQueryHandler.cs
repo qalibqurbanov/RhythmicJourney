@@ -4,11 +4,10 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using RhythmicJourney.Core.Entities.Identity;
-using RhythmicJourney.Application.Repository.Abstract;
-using RhythmicJourney.Persistence.Repository.Abstract;
-using RhythmicJourney.Application.Authentication.Abstract;
 using RhythmicJourney.Application.Features.Identity.Common;
 using RhythmicJourney.Application.Features.Identity.Queries;
+using RhythmicJourney.Application.Contracts.Infrastructure.Identity.Abstractions;
+using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 

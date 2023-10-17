@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using RhythmicJourney.Core.Entities.Identity;
 
-namespace RhythmicJourney.Persistence.Repository.Abstract;
+namespace RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions;
 
 /// <summary>
 /// Istifadeci/Istifadeciler ile elaqeli funksionalliqlarin imzalarini saxlayir.

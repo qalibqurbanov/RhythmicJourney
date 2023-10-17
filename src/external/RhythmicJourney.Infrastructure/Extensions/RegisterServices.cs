@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RhythmicJourney.Application.Authentication.Abstract;
-using RhythmicJourney.Infrastructure.Authentication.Concrete;
+using RhythmicJourney.Infrastructure.Identity.Concretes;
+using RhythmicJourney.Application.Contracts.Infrastructure.Identity.Abstractions;
 
 namespace RhythmicJourney.Infrastructure.Extensions;
 

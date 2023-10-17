@@ -3,9 +3,8 @@ using System.Threading;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using RhythmicJourney.Application.Repository.Abstract;
-using RhythmicJourney.Persistence.Repository.Abstract;
 using RhythmicJourney.Application.Features.Identity.Queries;
+using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 

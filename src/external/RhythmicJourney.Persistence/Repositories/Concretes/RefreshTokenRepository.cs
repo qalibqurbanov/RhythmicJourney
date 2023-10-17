@@ -2,10 +2,10 @@
 using System.Linq;
 using RhythmicJourney.Persistence.Contexts;
 using RhythmicJourney.Core.Entities.Identity;
-using RhythmicJourney.Application.Repository.Abstract;
 using Microsoft.EntityFrameworkCore;
+using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions;
 
-namespace RhythmicJourney.Persistence.Repository.Concrete;
+namespace RhythmicJourney.Persistence.Repositories.Concretes;
 
 /// <summary>
 /// Refresh Token ile elaqeli emeliyyatlarin implementasiyalarini saxlayir.

@@ -10,10 +10,9 @@ using RhythmicJourney.Persistence.Contexts;
 using RhythmicJourney.Core.Entities.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using RhythmicJourney.Persistence.Repository.Abstract;
-using RhythmicJourney.Application.Repository.Abstract;
-using RhythmicJourney.Persistence.Repository.Concrete;
-using RhythmicJourney.Application.Authentication.Entities;
+using RhythmicJourney.Persistence.Repositories.Concretes;
+using RhythmicJourney.Application.Models;
+using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions;
 
 namespace RhythmicJourney.Persistence.Extensions;
 

@@ -2,10 +2,10 @@
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using RhythmicJourney.Application.Authentication.Abstract;
-using RhythmicJourney.Application.Authentication.Entities;
+using RhythmicJourney.Application.Models;
+using RhythmicJourney.Application.Contracts.Infrastructure.Identity.Abstractions;
 
-namespace RhythmicJourney.Infrastructure.Authentication.Concrete;
+namespace RhythmicJourney.Infrastructure.Identity.Concretes;
 
 /// <summary>
 /// 'Refresh Token'-i validasiyadan kecirmek ucun lazimi funksionalliqlarin implementasiyalarini saxlayir.
