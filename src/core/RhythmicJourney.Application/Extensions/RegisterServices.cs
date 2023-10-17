@@ -21,6 +21,7 @@ public static class RegisterServices
             cfg.RegisterServicesFromAssembly(typeof(LoginQueryHandler).Assembly);
         });
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
 
         services.AddValidatorsFromAssembly(typeof(LoginQueryValidator).Assembly);
 
