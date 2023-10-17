@@ -2,7 +2,6 @@
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -36,16 +35,16 @@ public static class RegisterServices
                 options.CommandTimeout(30);
             });
 
-            if (builder.Environment.IsDevelopment()) /* Production-da iwletmirik, cunki DB-miz ve s. ile elaqeli gizli qalmali olan melumatlarida gostere biler. */
-            {
-                options.EnableDetailedErrors(true);
-                options.EnableSensitiveDataLogging(true);
-            }
-            else
-            {
-                options.EnableDetailedErrors(false);
-                options.EnableSensitiveDataLogging(false);
-            }
+            //if (builder.Environment.IsDevelopment()) /* Production-da iwletmirik, cunki DB-miz ve s. ile elaqeli gizli qalmali olan melumatlarida gostere biler. */
+            //{
+            //    options.EnableDetailedErrors(true);
+            //    options.EnableSensitiveDataLogging(true);
+            //}
+            //else
+            //{
+            //    options.EnableDetailedErrors(false);
+            //    options.EnableSensitiveDataLogging(false);
+            //}
         });
 
         services.AddIdentity<AppUser, IdentityRole<int>>(options =>

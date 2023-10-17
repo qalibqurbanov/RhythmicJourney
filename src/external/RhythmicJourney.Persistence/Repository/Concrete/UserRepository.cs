@@ -18,8 +18,8 @@ public class UserRepository : IUserRepository
     private readonly SignInManager<AppUser> _signInManager;
 
     public UserRepository(
-        RhythmicJourneyIdentityDbContext identityDbContext, 
-        UserManager<AppUser> userManager, 
+        RhythmicJourneyIdentityDbContext identityDbContext,
+        UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager)
     {
         this._userManager = userManager;
@@ -44,9 +44,19 @@ public class UserRepository : IUserRepository
             .FirstOrDefaultAsync(t => t.RefreshTokens.Any(r => r.Token.Equals(refreshToken)));
     }
 
+    public async Task<bool> IsPasswordValid(AppUser user, string password)
+    {
+        return await _userManager.CheckPasswordAsync(user, password);
+    }
+
     public async Task<SignInResult> SignIn(string email, string password)
     {
         return await _signInManager.PasswordSignInAsync(email, password, false, false);
+    }
+
+    public async Task SignOut()
+    {
+        await _signInManager.SignOutAsync();
     }
 
     public int Update(AppUser user)

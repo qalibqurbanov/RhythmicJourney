@@ -19,7 +19,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
     public async Task<AuthenticationResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         if (await _userRepository.GetUserByEmailAsync(request.Email) is not null)
-            return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.DUPLICATE_EMAIL } });
+            return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.DUPLICATE_EMAIL } });
 
         AppUser user = AppUser.CreateUser(request.FirstName, request.LastName, request.Email, request.Email);
         {
@@ -32,8 +32,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
         IdentityResult result = await _userRepository.CreateUserAsync(user, request.Password);
 
         if (result.Succeeded)
-            return await AuthenticationResult.Success(RhythmicJourney.Core.Constants.IdentityConstants.REGISTER_SUCCESSFUL);
+            return await AuthenticationResult.SuccessAsync(RhythmicJourney.Core.Constants.IdentityConstants.REGISTER_SUCCESSFUL);
         else
-            return await AuthenticationResult.Failure(result.Errors.ToList());
+            return await AuthenticationResult.FailureAsync(result.Errors.ToList());
     }
 }

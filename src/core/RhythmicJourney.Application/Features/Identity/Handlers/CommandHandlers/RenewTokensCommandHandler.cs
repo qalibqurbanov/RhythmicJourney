@@ -48,20 +48,20 @@ public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, Aut
 
         if (request.RefreshToken.IsEmpty())
         {
-            return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
+            return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
         }
 
         bool isRefreshTokenValid = _refreshTokenValidator.Validate(request.RefreshToken);
         if (!isRefreshTokenValid)
         {
-            return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
+            return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
         }
 
         AppUser userFromDb = await _userRepository.GetUserByRefreshToken(request.RefreshToken);
         {
             if (userFromDb == null)
             {
-                return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
+                return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
             }
         }
 
@@ -69,14 +69,14 @@ public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, Aut
         {
             if (existingRefreshToken == null)
             {
-                return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
+                return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
             }
             else
             {
                 /* Userin sahib oldugu Refresh Token revoke/deaktiv olunubsa: */
                 if (!existingRefreshToken.IsActive || existingRefreshToken.RevokedOn.HasValue || DateTime.UtcNow >= existingRefreshToken.ExpiresOn)
                 {
-                    return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_EXPIRED } });
+                    return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_EXPIRED } });
                 }
 
                 { /* Ilk once userin hazirki Refresh Tokenini revoke edirik, ardinca ise Usere yeni bir Access ve Refresh Token generate ederek DB-ya qeyd edirik, ardinca ise dondururuk cliente. */
@@ -87,7 +87,7 @@ public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, Aut
 
                     string newAccessToken = _tokenGenerator.GenerateAccessToken(userFromDb);
 
-                    return await AuthenticationResult.Success(newAccessToken, RT.Token);
+                    return await AuthenticationResult.SuccessAsync(newAccessToken, RT.Token);
                 }
             }
         }

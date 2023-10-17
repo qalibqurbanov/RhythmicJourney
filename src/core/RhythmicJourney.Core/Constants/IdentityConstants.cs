@@ -6,6 +6,7 @@
 public static partial class IdentityConstants
 {
     public static readonly string REGISTER_SUCCESSFUL = "Your registration has been completed successfully. Finally, please confirm your email to activate your account.";
+    public static readonly string LOGOUT_SUCCESSFUL = "You've been logged out successfully.";
 
     public static readonly string INVALID_CREDENTIALS = "Invalid credentials, please double-check your username and password and try again.";
 

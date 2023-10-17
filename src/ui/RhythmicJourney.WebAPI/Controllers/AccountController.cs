@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using RhythmicJourney.Application.Features.Identity.Common;
 using RhythmicJourney.Application.Features.Identity.Queries;
 using RhythmicJourney.Application.Features.Identity.Commands;
@@ -45,6 +46,16 @@ public class AccountController : ControllerBase
         );
 
         return Ok(result);
+    }
+
+    [Authorize]
+    [HttpDelete("logout")]
+    public async Task<IActionResult> Logout(CancellationToken cancellationToken)
+    {
+        LogoutQuery query = new LogoutQuery();
+        await _mediator.Send(query);
+
+        return StatusCode(StatusCodes.Status204NoContent);
     }
 
     [HttpPost("renew-tokens")]

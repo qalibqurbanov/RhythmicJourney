@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 
 namespace RhythmicJourney.Application.Extensions;
 
@@ -14,8 +14,10 @@ public static class RegisterServices
         {
             cfg.Lifetime = ServiceLifetime.Scoped; /* Elave edilen servislerin omru ne qeder olsun? default: 'Transient' (Requst ve Notification handlerleri 'Scoped', 'Behavior'-lar ise 'Transient' olmalidir) */
 
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            cfg.RegisterServicesFromAssembly(typeof(LoginQueryHandler).Assembly);
         });
+
+        services.AddHttpContextAccessor();
 
         return services;
     }

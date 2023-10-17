@@ -34,7 +34,7 @@ public class TokenGenerator : ITokenGenerator
         {
             new Claim("UserID", user.Id.ToString()), /* Claimin adi/tipi olaraq custom ad("UserID") demek yerine "ClaimTypes.NameIdentifier"-da demek olardi */
             new Claim(ClaimTypes.Name, user.Email),
-            new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()), /* Hazirki tarixi UTC-ye cevirib yaziriq */
+            new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer), /* Hazirki tarixi UTC-ye cevirib yaziriq */
             new Claim(JwtRegisteredClaimNames.Sub, $"{user.FirstName} {user.LastName}"),
             new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
             new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),

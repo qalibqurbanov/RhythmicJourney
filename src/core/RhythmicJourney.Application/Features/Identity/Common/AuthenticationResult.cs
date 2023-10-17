@@ -14,17 +14,17 @@ public partial class AuthenticationResult
     /// <summary>
     /// Usere netice olaraq Access ve Refresh token dondurmek isteyirikse bu overloadi iwledirik.
     /// </summary>
-    public static Task<AuthenticationResult> Success(string accessToken, string refreshToken) => Task.FromResult(new AuthenticationResult() { IsSuccess = true, AccessToken = accessToken, RefreshToken = refreshToken });
+    public static Task<AuthenticationResult> SuccessAsync(string accessToken, string refreshToken) => Task.FromResult(new AuthenticationResult() { IsSuccess = true, AccessToken = accessToken, RefreshToken = refreshToken });
 
     /// <summary>
     /// Usere netice olaraq sadece mesaj dondurmek isteyirikse bu overloadi iwledirik.
     /// </summary>
-    public static Task<AuthenticationResult> Success(string message) => Task.FromResult(new AuthenticationResult() { Message = message, IsSuccess = true });
+    public static Task<AuthenticationResult> SuccessAsync(string message) => Task.FromResult(new AuthenticationResult() { Message = message, IsSuccess = true });
 
     /// <summary>
     /// Usere netice olaraq baw vermiw xetani dondurmek isteyirikse bu overloadi iwledirik.
     /// </summary>
-    public static Task<AuthenticationResult> Failure(List<IdentityError> error) => Task.FromResult(new AuthenticationResult() { IsSuccess = false, Errors = error });
+    public static Task<AuthenticationResult> FailureAsync(List<IdentityError> error) => Task.FromResult(new AuthenticationResult() { IsSuccess = false, Errors = error });
 }
 
 public partial class AuthenticationResult

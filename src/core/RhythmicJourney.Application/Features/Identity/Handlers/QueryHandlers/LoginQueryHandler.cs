@@ -9,6 +9,7 @@ using RhythmicJourney.Persistence.Repository.Abstract;
 using RhythmicJourney.Application.Authentication.Abstract;
 using RhythmicJourney.Application.Features.Identity.Common;
 using RhythmicJourney.Application.Features.Identity.Queries;
+using System;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 
@@ -17,21 +18,15 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResul
     private readonly ITokenGenerator _tokenGenerator;
     private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
-    private readonly SignInManager<AppUser> _signInManager;
-    private readonly UserManager<AppUser> _userManager;
 
     public LoginQueryHandler(
         ITokenGenerator tokenGenerator,
         IUserRepository userRepository,
-        IRefreshTokenRepository refreshTokenRepository,
-        SignInManager<AppUser> signInManager,
-        UserManager<AppUser> userManager)
+        IRefreshTokenRepository refreshTokenRepository)
     {
         this._tokenGenerator = tokenGenerator;
         this._userRepository = userRepository;
         this._refreshTokenRepository = refreshTokenRepository;
-        this._signInManager = signInManager;
-        this._userManager = userManager;
     }
 
     public async Task<AuthenticationResult> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -40,18 +35,18 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResul
 
         {
             if (userFromDb is null)
-                return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_NOT_EXISTS } });
+                return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_NOT_EXISTS } });
 
-            if (!await _userManager.CheckPasswordAsync(userFromDb, request.Password))
-                return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.INVALID_CREDENTIALS } });
+            if (!await _userRepository.IsPasswordValid(userFromDb, request.Password))
+                return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.INVALID_CREDENTIALS } });
 
-            SignInResult result = await _signInManager.PasswordSignInAsync(request.Email, request.Password, false, false);
+            SignInResult result = await _userRepository.SignIn(request.Email, request.Password);
 
             if (!result.Succeeded)
             {
                 if (result.IsLockedOut)
                 {
-                    return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = "Your account is currently locked and inaccessible." } });
+                    return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = "Your account is currently locked and inaccessible." } });
                 }
                 //else if (result.IsNotAllowed)
                 //{
@@ -66,7 +61,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResul
                 //}
                 else if (result.RequiresTwoFactor)
                 {
-                    return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = "Please complete the two-factor authentication (2FA) process to access your account." } });
+                    return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = "Please complete the two-factor authentication (2FA) process to access your account." } });
                 }
             }
         }
@@ -77,7 +72,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResul
 
             string newAccessToken = _tokenGenerator.GenerateAccessToken(userFromDb);
 
-            return await AuthenticationResult.Success(newAccessToken, RT.Token);
+            return await AuthenticationResult.SuccessAsync(newAccessToken, RT.Token);
         }
     }
 }

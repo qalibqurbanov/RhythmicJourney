@@ -3,6 +3,7 @@ using System.Linq;
 using RhythmicJourney.Persistence.Contexts;
 using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Repository.Abstract;
+using Microsoft.EntityFrameworkCore;
 
 namespace RhythmicJourney.Persistence.Repository.Concrete;
 
@@ -47,6 +48,24 @@ public class RefreshTokenRepository : IRefreshTokenRepository
                     RT.IsActive = false;
                     RT.RevokedOn = DateTime.UtcNow;
                 }
+            }
+        }
+
+        return _identityDbContext.SaveChanges();
+    }
+
+    public int RevokeUsersAllRefreshTokens(int userID)
+    {
+        AppUser userFromDb = _identityDbContext.Users
+            .Include(user => user.RefreshTokens)
+            .FirstOrDefault(u => u.Id == userID);
+
+        if (userFromDb != null)
+        {
+            foreach(RefreshToken RT in userFromDb.RefreshTokens)
+            {
+                RT.IsActive = false;
+                RT.RevokedOn = DateTime.UtcNow;
             }
         }
 
