@@ -11,6 +11,9 @@ using RhythmicJourney.Application.Features.Identity.Commands;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.CommandHandlers;
 
+/// <summary>
+/// Register olma sorgusunu reallawdiracaq olan funksionalligi saxlayir.
+/// </summary>
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthenticationResult>
 {
     private readonly IUserRepository _userRepository;

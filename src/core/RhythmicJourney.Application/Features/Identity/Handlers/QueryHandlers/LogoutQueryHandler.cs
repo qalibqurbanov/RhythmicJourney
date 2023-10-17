@@ -9,6 +9,9 @@ using RhythmicJourney.Application.Features.Identity.Queries;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 
+/// <summary>
+/// Logout olma sorgusunu reallawdiracaq olan funksionalligi saxlayir.
+/// </summary>
 public class LogoutQueryHandler : IRequestHandler<LogoutQuery>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;

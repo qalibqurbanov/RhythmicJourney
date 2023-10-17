@@ -12,6 +12,9 @@ using RhythmicJourney.Application.Features.Identity.Queries;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 
+/// <summary>
+/// Login olma sorgusunu reallawdiracaq olan funksionalligi saxlayir.
+/// </summary>
 public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResult>
 {
     private readonly ITokenGenerator _tokenGenerator;

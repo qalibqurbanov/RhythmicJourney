@@ -15,6 +15,9 @@ using RhythmicJourney.Application.Features.Identity.Commands;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.CommandHandlers;
 
+/// <summary>
+/// Tokenleri yenileme sorgusunu reallawdiracaq olan funksionalligi saxlayir.
+/// </summary>
 public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, AuthenticationResult>
 {
     private readonly IRefreshTokenValidator _refreshTokenValidator;
