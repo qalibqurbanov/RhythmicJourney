@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ public class AccountController : ControllerBase
         if (!result.IsSuccess) return Problem
         (
             statusCode: StatusCodes.Status401Unauthorized,
-            title: string.Join("\n", result.Errors.Select(x => x.Description))
+            title: string.Join(Environment.NewLine, result.Errors.Select(x => x.Description))
         );
 
         return Ok(result);
@@ -42,7 +43,7 @@ public class AccountController : ControllerBase
         if (!result.IsSuccess) return Problem
         (
             statusCode: StatusCodes.Status401Unauthorized,
-            title: string.Join("\n", result.Errors.Select(x => x.Description))
+            title: string.Join(Environment.NewLine, result.Errors.Select(x => x.Description))
         );
 
         return Ok(result);
@@ -82,7 +83,7 @@ public class AccountController : ControllerBase
 
         if (!result.IsSuccess)
         {
-            return Unauthorized(string.Join("\n", result.Errors.Select(x => x.Description)));
+            return Unauthorized(string.Join(Environment.NewLine, result.Errors.Select(x => x.Description)));
         }
 
         return Ok(result.Message);

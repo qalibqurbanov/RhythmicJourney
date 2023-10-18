@@ -2,11 +2,7 @@
 
 namespace RhythmicJourney.Application.Features.Identity.Common;
 
-public class ConfirmEmailRequestDTO
-{
-    [Required]
-    public string UserID { get; set; }
-
-    [Required]
-    public string ConfirmationToken { get; set; }
-}
+/// <summary>
+/// Client ozunun akkauntunu email vasitesile tesdiqlemek meqsedile bize gondermiw oldugu datalari temsil edir.
+/// </summary>
+public record ConfirmEmailRequestDTO(string UserID, string ConfirmationToken);
