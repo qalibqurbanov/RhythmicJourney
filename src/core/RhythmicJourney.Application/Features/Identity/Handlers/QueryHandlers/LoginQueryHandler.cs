@@ -47,23 +47,23 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResul
             {
                 if (result.IsLockedOut)
                 {
-                    return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = "Your account is currently locked and inaccessible." } });
+                    return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_LOCKED } });
                 }
-                //else if (result.IsNotAllowed)
-                //{
-                //    if (!await _userManager.IsEmailConfirmedAsync(userFromDb))
-                //    {
-                //        return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = "Your account is not confirmed. Please confirm your email to proceed." } });
-                //    }
-                //    else if (!await _userManager.IsPhoneNumberConfirmedAsync(userFromDb))
-                //    {
-                //        return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = "Your account is not confirmed. Please confirm your phone number to proceed." } });
-                //    }
-                //}
-                else if (result.RequiresTwoFactor)
+                else if (result.IsNotAllowed)
                 {
-                    return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = "Please complete the two-factor authentication (2FA) process to access your account." } });
+                    if (!userFromDb.EmailConfirmed)
+                    {
+                        return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.EMAIL_NOT_CONFIRMED } });
+                    }
+                    //else if (!userFromDb.PhoneNumberConfirmed)
+                    //{
+                    //    return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = "Your account is not confirmed. Please confirm your phone number to proceed." } });
+                    //}
                 }
+                //else if (result.RequiresTwoFactor)
+                //{
+                //    return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = "Please complete the two-factor authentication (2FA) process to access your account." } });
+                //}
             }
         }
 

@@ -3,7 +3,7 @@
 namespace RhythmicJourney.Application.Contracts.Infrastructure.Identity.Abstractions;
 
 /// <summary>
-/// 'Access Token' ve 'Refresh Token' generasiya eden funksionalliqlarin imzalarini saxlayir.
+/// 'Access Token' ve 'Refresh Token' generasiya eden emeliyyatlarin imzalarini saxlayir.
 /// </summary>
 public interface ITokenGenerator
 {

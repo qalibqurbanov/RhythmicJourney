@@ -33,10 +33,11 @@ public partial class AppUser
     {
         return new AppUser()
         {
-            FirstName = firstName,
-            LastName = lastName,
-            Email = email,
-            UserName = userName
+            FirstName      = firstName,
+            LastName       = lastName,
+            Email          = email,
+            UserName       = userName,
+            EmailConfirmed = false
         };
     }
 }

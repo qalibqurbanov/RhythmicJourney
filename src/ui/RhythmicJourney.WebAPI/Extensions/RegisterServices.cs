@@ -50,8 +50,8 @@ public static class RegisterServices
         // services.AddRouting(cfg =>
         services.Configure<RouteOptions>(cfg =>
         {
-            cfg.LowercaseUrls = true; 
-            cfg.LowercaseQueryStrings = true; /* 'true' ola bilmesi ucun 'LowercaseUrls'-de 'true' set olunmalidir. */
+            cfg.LowercaseUrls = true;
+            cfg.LowercaseQueryStrings = false; /* 'true' ola bilmesi ucun 'LowercaseUrls'-de 'true' set olunmalidir. Query String-de token ve s. gonderende ve ya qebul edende problem yaradir deye 'false' olsa yaxwidir. */
         });
 
         return services;

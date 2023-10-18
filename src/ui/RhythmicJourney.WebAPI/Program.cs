@@ -15,7 +15,7 @@ public class Program
             builder.Services
                 .RegisterApplicationServices()
                 .RegisterPersistenceServices(builder)
-                .RegisterInfrastructureServices()
+                .RegisterInfrastructureServices(builder.Configuration)
                 .RegisterUIServices();
         }
 

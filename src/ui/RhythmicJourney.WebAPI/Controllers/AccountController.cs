@@ -61,8 +61,8 @@ public class AccountController : ControllerBase
     [HttpPost("renew-tokens")]
     public async Task<IActionResult> RenewAccessToken([FromBody] RenewTokensRequestDTO model, CancellationToken cancellationToken)
     {
-        RenewTokensCommand renewTokensQuery = new RenewTokensCommand(model.RefreshToken);
-        AuthenticationResult result = await _mediator.Send(renewTokensQuery);
+        RenewTokensCommand query = new RenewTokensCommand(model.RefreshToken);
+        AuthenticationResult result = await _mediator.Send(query);
 
         if (!result.IsSuccess) return Problem
         (
@@ -71,5 +71,20 @@ public class AccountController : ControllerBase
         );
 
         return Ok(result);
+    }
+
+    [HttpGet("confirm-email")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailRequestDTO model, CancellationToken cancellationToken)
+    {
+        ConfirmEmailQuery query = new ConfirmEmailQuery(model.UserID, model.ConfirmationToken);
+        AuthenticationResult result = await _mediator.Send(query);
+
+        if (!result.IsSuccess)
+        {
+            return Unauthorized(string.Join("\n", result.Errors.Select(x => x.Description)));
+        }
+
+        return Ok(result.Message);
     }
 }

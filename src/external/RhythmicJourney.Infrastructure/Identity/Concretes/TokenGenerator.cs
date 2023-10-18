@@ -10,7 +10,7 @@ using RhythmicJourney.Application.Contracts.Infrastructure.Identity.Abstractions
 namespace RhythmicJourney.Infrastructure.Identity.Concretes;
 
 /// <summary>
-/// 'Access Token' ve 'Refresh Token' generasiya eden funksionalliqlarin implementasiyalarini saxlayir.
+/// 'Access Token' ve 'Refresh Token' generasiya eden emeliyyatlarin implementasiyalarini saxlayir.
 /// </summary>
 public class TokenGenerator : ITokenGenerator
 {

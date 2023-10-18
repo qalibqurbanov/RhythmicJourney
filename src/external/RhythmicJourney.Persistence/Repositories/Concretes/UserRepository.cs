@@ -9,7 +9,7 @@ using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstraction
 namespace RhythmicJourney.Persistence.Repositories.Concretes;
 
 /// <summary>
-/// Istifadeci/Istifadeciler ile elaqeli funksionalliqlari saxlayir.
+/// Istifadeci/Istifadeciler ile elaqeli emeliyyatlarin saxlayir.
 /// </summary>
 public class UserRepository : IUserRepository
 {
@@ -25,6 +25,11 @@ public class UserRepository : IUserRepository
         this._userManager = userManager;
         this._signInManager = signInManager;
         this._identityDbContext = identityDbContext;
+    }
+
+    public async Task<AppUser?> GetUserById(int userId)
+    {
+        return await _userManager.FindByIdAsync(userId.ToString());
     }
 
     public async Task<IdentityResult> CreateUserAsync(AppUser user, string password)
@@ -64,5 +69,13 @@ public class UserRepository : IUserRepository
         _identityDbContext.Users.Update(user);
 
         return _identityDbContext.SaveChanges();
+    }
+
+    public async Task<IdentityResult> ConfirmEmail(AppUser user, string confirmationToken)
+    {
+        AppUser userFromDb = await GetUserById(user.Id);
+        IdentityResult result = await _userManager.ConfirmEmailAsync(userFromDb, confirmationToken);
+
+        return result;
     }
 }
