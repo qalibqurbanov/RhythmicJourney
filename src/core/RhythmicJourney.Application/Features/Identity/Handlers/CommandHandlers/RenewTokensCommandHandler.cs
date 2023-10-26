@@ -24,16 +24,12 @@ public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, Aut
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly ITokenGenerator _tokenGenerator;
 
-    public RenewTokensCommandHandler(
-        IRefreshTokenValidator refreshTokenValidator,
-        IUserRepository userRepository,
-        IRefreshTokenRepository refreshTokenRepository,
-        ITokenGenerator tokenGenerator)
+    public RenewTokensCommandHandler(IRefreshTokenValidator refreshTokenValidator, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, ITokenGenerator tokenGenerator)
     {
-        _refreshTokenValidator = refreshTokenValidator;
-        _userRepository = userRepository;
-        _tokenGenerator = tokenGenerator;
-        _refreshTokenRepository = refreshTokenRepository;
+        this._refreshTokenValidator = refreshTokenValidator;
+        this._userRepository = userRepository;
+        this._tokenGenerator = tokenGenerator;
+        this._refreshTokenRepository = refreshTokenRepository;
     }
 
     public async Task<AuthenticationResult> Handle(RenewTokensCommand request, CancellationToken cancellationToken)

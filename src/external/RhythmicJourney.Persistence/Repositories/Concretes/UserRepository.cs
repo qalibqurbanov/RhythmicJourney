@@ -17,10 +17,7 @@ public class UserRepository : IUserRepository
     private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
 
-    public UserRepository(
-        RhythmicJourneyIdentityDbContext identityDbContext,
-        UserManager<AppUser> userManager,
-        SignInManager<AppUser> signInManager)
+    public UserRepository(RhythmicJourneyIdentityDbContext identityDbContext, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
     {
         this._userManager = userManager;
         this._signInManager = signInManager;
@@ -39,11 +36,6 @@ public class UserRepository : IUserRepository
         return await _userManager.FindByIdAsync(userId.ToString());
     }
 
-    public async Task<IdentityResult> CreateUserAsync(AppUser user, string password)
-    {
-        return await _userManager.CreateAsync(user, password);
-    }
-
     public async Task<AppUser?> GetUserByEmailAsync(string email)
     {
         return await _userManager.Users.FirstOrDefaultAsync(user => user.Email == email);
@@ -54,6 +46,24 @@ public class UserRepository : IUserRepository
         return await _identityDbContext.Users
             .Include(t => t.RefreshTokens)
             .FirstOrDefaultAsync(t => t.RefreshTokens.Any(r => r.Token.Equals(refreshToken)));
+    }
+
+    public async Task<IdentityResult> CreateUserAsync(AppUser user, string password)
+    {
+        return await _userManager.CreateAsync(user, password);
+    }
+
+    public async Task<IdentityResult> ConfirmEmailAsync(AppUser user, string confirmationToken)
+    {
+        AppUser userFromDb = await GetUserByIdAsync(user.Id);
+        IdentityResult result = await _userManager.ConfirmEmailAsync(userFromDb, confirmationToken);
+
+        return result;
+    }
+
+    public async Task<IdentityResult> ResetPasswordAsync(AppUser user, string resetPasswordToken, string newPassword)
+    {
+        return await _userManager.ResetPasswordAsync(user, resetPasswordToken, newPassword);
     }
 
     public async Task<bool> IsPasswordValidAsync(AppUser user, string password)
@@ -69,13 +79,5 @@ public class UserRepository : IUserRepository
     public async Task SignOutAsync()
     {
         await _signInManager.SignOutAsync();
-    }
-
-    public async Task<IdentityResult> ConfirmEmailAsync(AppUser user, string confirmationToken)
-    {
-        AppUser userFromDb = await GetUserByIdAsync(user.Id);
-        IdentityResult result = await _userManager.ConfirmEmailAsync(userFromDb, confirmationToken);
-
-        return result;
     }
 }

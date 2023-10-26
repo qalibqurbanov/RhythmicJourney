@@ -7,10 +7,13 @@ public static partial class IdentityConstants
 {
     public static readonly string REGISTER_SUCCESSFUL = "Your registration has been completed successfully. Finally, please confirm your email to activate your account.";
     public static readonly string REGISTER_SUCCESSFUL_AND_CONFIRM_EMAIL = "Congratulations! Your registration was successful. Please confirm your email to complete the registration process.";
+    public static readonly string PASSWORD_RESET_SUCCESSFUL = "Congratulations! Your password has been reset, and you're ready to log in.";
     public static readonly string EMAIL_CONFIRM_SUCCESSFUL = "Congratulations, your email is confirmed! Log in and get started.";
+    public static readonly string EMAIL_RESET_SENT = "We've sent you an email with instructions for resetting your password. Please check your email.";
     public static readonly string EMAIL_NOT_CONFIRMED = "To start using your account, please confirm your email.";
     public static readonly string EMAIL_CONFIRM_URL_INVALID = "Oops! The confirmation URL is invalid. Please double-check it.";
     public static readonly string LOGOUT_SUCCESSFUL = "You've been logged out successfully.";
+
 
     public static readonly string INVALID_CREDENTIALS = "Invalid credentials, please double-check your username and password and try again.";
     public static readonly string DUPLICATE_EMAIL = "Account with this Email already exists.";

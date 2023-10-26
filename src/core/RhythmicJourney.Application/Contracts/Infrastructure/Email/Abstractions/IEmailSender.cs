@@ -8,5 +8,6 @@ namespace RhythmicJourney.Application.Contracts.Infrastructure.Email.Abstraction
 /// </summary>
 public interface IEmailSender
 {
-    Task SendConfirmationEmailAsync(AppUser user);
+    Task SendConfirmationMailAsync(AppUser user);
+    Task SendResetPasswordMailAsync(AppUser user);
 }

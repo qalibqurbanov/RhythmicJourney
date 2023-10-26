@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using RhythmicJourney.Persistence.Contexts;
 using RhythmicJourney.Core.Entities.Identity;
-using Microsoft.EntityFrameworkCore;
 using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions;
 
 namespace RhythmicJourney.Persistence.Repositories.Concretes;

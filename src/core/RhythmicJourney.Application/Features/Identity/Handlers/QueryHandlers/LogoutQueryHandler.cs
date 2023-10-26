@@ -17,11 +17,7 @@ public class LogoutQueryHandler : IRequestHandler<LogoutQuery>
     private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    public LogoutQueryHandler(
-        IHttpContextAccessor httpContextAccessor,
-        IUserRepository userRepository,
-        IRefreshTokenRepository refreshTokenRepository
-        )
+    public LogoutQueryHandler(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
     {
         this._httpContextAccessor = httpContextAccessor;
         this._userRepository = userRepository;

@@ -20,11 +20,7 @@ public partial class HotmailEmailSender : IEmailSender
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly HotmailSettings _mailSettings;
 
-    public HotmailEmailSender(
-        UserManager<AppUser> userManager, 
-        IHttpContextAccessor httpContextAccessor, 
-        LinkGenerator linkGenerator, 
-        HotmailSettings mailSettings)
+    public HotmailEmailSender(UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, HotmailSettings mailSettings)
     {
         this._userManager = userManager;
         this._httpContextAccessor = httpContextAccessor;
@@ -33,10 +29,10 @@ public partial class HotmailEmailSender : IEmailSender
     }
 
     /// <summary>
-    /// Bu metod userin akauntunu Mail vasitesile tesdiqlemek ucun mail gonderir.
+    /// Bu metod userin akauntunu Mail vasitesile tesdiqlemek ucun mail gonderir usere(mailine).
     /// </summary>
     /// <param name="user">Mail hansi usere gonderilsin?</param>
-    public async Task SendConfirmationEmailAsync(AppUser user)
+    public async Task SendConfirmationMailAsync(AppUser user)
     {
         string confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         // byte[] bytesOfToken = Encoding.UTF8.GetBytes(token);
@@ -57,6 +53,24 @@ public partial class HotmailEmailSender : IEmailSender
             mailTo: user.Email,
             mailSubject: "Thanks for signing up! Verify your email to complete registration.",
             mailBody: $"Please confirm your account by clicking <a href='{confirmationUrl}'>here</a>."
+        );
+    }
+
+    /// <summary>
+    /// Bu metod userin akauntuna giriwini berpa etmek vasitesile wifre berpa etme linkini gonderir usere(mailine).
+    /// </summary>
+    /// <param name="user">Mail hansi usere gonderilsin?</param>
+    public async Task SendResetPasswordMailAsync(AppUser user)
+    {
+        string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        // byte[] bytesOfToken = Encoding.UTF8.GetBytes(token);
+        // string encodedBytesOfToken = WebEncoders.Base64UrlEncode(bytesOfToken);
+
+        await SendEmailAsync
+        (
+            mailTo: user.Email,
+            mailSubject: "Reset Password.",
+            mailBody: $"Please use this token to reset your password: {token}"
         );
     }
 }

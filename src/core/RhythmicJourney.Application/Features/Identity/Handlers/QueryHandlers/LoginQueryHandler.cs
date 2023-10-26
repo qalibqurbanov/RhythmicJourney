@@ -20,10 +20,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResul
     private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    public LoginQueryHandler(
-        ITokenGenerator tokenGenerator,
-        IUserRepository userRepository,
-        IRefreshTokenRepository refreshTokenRepository)
+    public LoginQueryHandler(ITokenGenerator tokenGenerator, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
     {
         this._tokenGenerator = tokenGenerator;
         this._userRepository = userRepository;
@@ -33,7 +30,6 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResul
     public async Task<AuthenticationResult> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
         AppUser userFromDb = await _userRepository.GetUserByEmailAsync(request.Email);
-
         {
             if (userFromDb is null)
                 return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_NOT_EXISTS } });

@@ -4,7 +4,7 @@ using RhythmicJourney.Application.Features.Identity.Common;
 namespace RhythmicJourney.Application.Features.Identity.Commands;
 
 /// <summary>
-/// Register sorgusunu temsil edir.
+/// Qeydiyyatdan kecme sorgusunu temsil edir.
 /// </summary>
 /// <param name="FirstName">Userin adi ne olsun?</param>
 /// <param name="LastName">Userin soyadi ne olsun?</param>

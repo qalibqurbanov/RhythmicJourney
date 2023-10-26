@@ -21,10 +21,10 @@ public class AccountController : ControllerBase
     public AccountController(IMediator mediator) => this._mediator = mediator;
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterRequestDTO model, CancellationToken cancellationToken)
+    public async Task<IActionResult> Register([FromBody] RegisterRequestDTO model, CancellationToken cancellationToken)
     {
         RegisterCommand command = new RegisterCommand(model.FirstName, model.LastName, model.Email, model.Password);
-        AuthenticationResult result = await _mediator.Send(command);
+        AuthenticationResult result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess) return Problem
         (
@@ -36,10 +36,10 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequestDTO model, CancellationToken cancellationToken)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDTO model, CancellationToken cancellationToken)
     {
         LoginQuery query = new LoginQuery(model.Email, model.Password);
-        AuthenticationResult result = await _mediator.Send(query);
+        AuthenticationResult result = await _mediator.Send(query, cancellationToken);
 
         if (!result.IsSuccess) return Problem
         (
@@ -50,8 +50,8 @@ public class AccountController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize]
     [HttpDelete("logout")]
+    [Authorize]
     public async Task<IActionResult> Logout(CancellationToken cancellationToken)
     {
         LogoutQuery query = new LogoutQuery();
@@ -64,7 +64,7 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> RenewAccessToken([FromBody] RenewTokensRequestDTO model, CancellationToken cancellationToken)
     {
         RenewTokensCommand command = new RenewTokensCommand(model.RefreshToken);
-        AuthenticationResult result = await _mediator.Send(command);
+        AuthenticationResult result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess) return Problem
         (
@@ -80,7 +80,35 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailRequestDTO model, CancellationToken cancellationToken)
     {
         ConfirmEmailQuery query = new ConfirmEmailQuery(model.UserID, model.ConfirmationToken);
-        AuthenticationResult result = await _mediator.Send(query);
+        AuthenticationResult result = await _mediator.Send(query, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return Unauthorized(string.Join(Environment.NewLine, result.Errors.Select(x => x.Description)));
+        }
+
+        return Ok(result.Message);
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequestDTO model, CancellationToken cancellationToken)
+    {
+        ForgotPasswordCommand command = new ForgotPasswordCommand(model.Email);
+        AuthenticationResult result = await _mediator.Send(command, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return Unauthorized(string.Join(Environment.NewLine, result.Errors.Select(x => x.Description)));
+        }
+
+        return Ok(result.Message);
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO model, CancellationToken cancellationToken)
+    {
+        ResetPasswordCommand command = new ResetPasswordCommand(model.Email, model.Password, model.PasswordConfirm, model.ResetPasswordToken);
+        AuthenticationResult result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess)
         {

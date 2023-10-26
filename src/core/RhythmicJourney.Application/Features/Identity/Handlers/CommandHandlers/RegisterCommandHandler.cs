@@ -20,9 +20,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
     private readonly IUserRepository _userRepository;
     private readonly IEmailSender _emailSender;
 
-    public RegisterCommandHandler(
-        IUserRepository userRepository,
-        IEmailSender emailSender)
+    public RegisterCommandHandler(IUserRepository userRepository, IEmailSender emailSender)
     {
         this._userRepository = userRepository;
         this._emailSender = emailSender;
@@ -37,7 +35,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
         {
             /*
                 * 'email login' ucun hem 'Email' hem de 'UserEmail' fieldlari uygun email adresi("request.Email") saxlamalidir, bu sebeble her ikisine("Email" ve "UserName") eyni datani("request.Email") verirem.
-                + Telefonu login kimi iwletmek isteseydik de eyni wekilde hem "UserName" hem de "Telephone" her ikisi telefon nomremize beraber edilmelidir.
+                + Telefonu login kimi iwletmek isteseydik de eyni wekilde hem "UserName" hem de "Telephone" her ikisi telefon nomremize beraber edecek idik.
             */
         }
 
@@ -45,7 +43,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
         {
             if (result.Succeeded)
             {
-                await _emailSender.SendConfirmationEmailAsync(newUser);
+                await _emailSender.SendConfirmationMailAsync(newUser);
 
                 return await AuthenticationResult.SuccessAsync(RhythmicJourney.Core.Constants.IdentityConstants.REGISTER_SUCCESSFUL_AND_CONFIRM_EMAIL);
 

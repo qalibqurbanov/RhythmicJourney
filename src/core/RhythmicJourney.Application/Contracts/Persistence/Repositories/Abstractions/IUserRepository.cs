@@ -15,6 +15,7 @@ public interface IUserRepository
     Task<AppUser?> GetUserByRefreshTokenAsync(string refreshToken);
     Task<IdentityResult> CreateUserAsync(AppUser user, string password);
     Task<IdentityResult> ConfirmEmailAsync(AppUser user, string confirmationToken);
+    Task<IdentityResult> ResetPasswordAsync(AppUser user, string resetPasswordToken, string newPassword);
     Task<SignInResult> SignInAsync(string email, string password);
     Task SignOutAsync();
     Task<bool> IsPasswordValidAsync(AppUser user, string password);
