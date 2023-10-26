@@ -27,7 +27,14 @@ public class UserRepository : IUserRepository
         this._identityDbContext = identityDbContext;
     }
 
-    public async Task<AppUser?> GetUserById(int userId)
+    public int Update(AppUser user)
+    {
+        _identityDbContext.Users.Update(user);
+
+        return _identityDbContext.SaveChanges();
+    }
+
+    public async Task<AppUser?> GetUserByIdAsync(int userId)
     {
         return await _userManager.FindByIdAsync(userId.ToString());
     }
@@ -42,38 +49,31 @@ public class UserRepository : IUserRepository
         return await _userManager.Users.FirstOrDefaultAsync(user => user.Email == email);
     }
 
-    public async Task<AppUser?> GetUserByRefreshToken(string refreshToken)
+    public async Task<AppUser?> GetUserByRefreshTokenAsync(string refreshToken)
     {
         return await _identityDbContext.Users
             .Include(t => t.RefreshTokens)
             .FirstOrDefaultAsync(t => t.RefreshTokens.Any(r => r.Token.Equals(refreshToken)));
     }
 
-    public async Task<bool> IsPasswordValid(AppUser user, string password)
+    public async Task<bool> IsPasswordValidAsync(AppUser user, string password)
     {
         return await _userManager.CheckPasswordAsync(user, password);
     }
 
-    public async Task<SignInResult> SignIn(string email, string password)
+    public async Task<SignInResult> SignInAsync(string email, string password)
     {
         return await _signInManager.PasswordSignInAsync(email, password, false, false);
     }
 
-    public async Task SignOut()
+    public async Task SignOutAsync()
     {
         await _signInManager.SignOutAsync();
     }
 
-    public int Update(AppUser user)
+    public async Task<IdentityResult> ConfirmEmailAsync(AppUser user, string confirmationToken)
     {
-        _identityDbContext.Users.Update(user);
-
-        return _identityDbContext.SaveChanges();
-    }
-
-    public async Task<IdentityResult> ConfirmEmail(AppUser user, string confirmationToken)
-    {
-        AppUser userFromDb = await GetUserById(user.Id);
+        AppUser userFromDb = await GetUserByIdAsync(user.Id);
         IdentityResult result = await _userManager.ConfirmEmailAsync(userFromDb, confirmationToken);
 
         return result;

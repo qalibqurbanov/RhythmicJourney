@@ -1,4 +1,4 @@
-﻿namespace RhythmicJourney.Application.Features.Identity.Common;
+﻿namespace RhythmicJourney.Application.Features.Identity.Common.DTOs;
 
 /// <summary>
 /// Clientin log-in meqsedile bize(servere) HTTP POST Request vasitesile gondermiw oldugu datalari temsil edir.

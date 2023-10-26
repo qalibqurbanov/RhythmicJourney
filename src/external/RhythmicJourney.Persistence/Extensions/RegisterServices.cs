@@ -62,6 +62,12 @@ public static class RegisterServices
             .AddEntityFrameworkStores<RhythmicJourneyIdentityDbContext>()
             .AddDefaultTokenProviders();
 
+        services.Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromHours(1));
+        /*
+            * Def: 24 hours.
+            > "https://github.com/dotnet/aspnetcore/blob/main/src/Identity/Core/src/DataProtectionTokenProviderOptions.cs".
+        */
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

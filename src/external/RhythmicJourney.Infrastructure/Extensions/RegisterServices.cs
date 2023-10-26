@@ -18,17 +18,11 @@ public static class RegisterServices
         services.AddScoped<ITokenGenerator, TokenGenerator>();
         services.AddScoped<IRefreshTokenValidator, RefreshTokenValidator>();
 
-        MailSettings mailSettings = new MailSettings();
-        configuration.Bind(MailSettings.SectionName, mailSettings);
-        services.AddScoped<IEmailSender, HotmailEmailSender>(serviceProvider => new HotmailEmailSender
-        (
-            /* IoC Container-dan 'IEmailSender' teleb olunsa geriye icerisi default olaraq awagidaki datalarla dolu olan 'HotmailEmailSender' orneyi dondururuk: */
-            hostAddress:       mailSettings.Host,
-            port:              mailSettings.Port,
-            enableSSL:         mailSettings.EnableSSL,
-            developerEmail:    mailSettings.DeveloperEmail,
-            developerPassword: mailSettings.DeveloperPassword
-        ));
+        HotmailSettings mailSettings = new HotmailSettings();
+        configuration.Bind(HotmailSettings.SectionName, mailSettings);
+        services.AddSingleton<HotmailSettings>(mailSettings);
+
+        services.AddScoped<IEmailSender, HotmailEmailSender>();
 
         return services;
     }

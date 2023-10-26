@@ -1,7 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing;
 using RhythmicJourney.Core.Entities.Identity;
 
 namespace RhythmicJourney.Application.Contracts.Infrastructure.Email.Abstractions;
@@ -11,5 +8,5 @@ namespace RhythmicJourney.Application.Contracts.Infrastructure.Email.Abstraction
 /// </summary>
 public interface IEmailSender
 {
-    Task SendEmailAsync(AppUser user, UserManager<AppUser> userManager, LinkGenerator linkGenerator, HttpContext httpContext);
+    Task SendConfirmationEmailAsync(AppUser user);
 }

@@ -59,7 +59,7 @@ public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, Aut
             return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
         }
 
-        AppUser userFromDb = await _userRepository.GetUserByRefreshToken(request.RefreshToken);
+        AppUser userFromDb = await _userRepository.GetUserByRefreshTokenAsync(request.RefreshToken);
         {
             if (userFromDb == null)
             {

@@ -36,6 +36,6 @@ public class LogoutQueryHandler : IRequestHandler<LogoutQuery>
         }
 
         _refreshTokenRepository.RevokeUsersAllRefreshTokens(userID);
-        await _userRepository.SignOut();
+        await _userRepository.SignOutAsync();
     }
 }

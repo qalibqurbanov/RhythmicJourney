@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using RhythmicJourney.Application.Features.Identity.Common;
 using RhythmicJourney.Application.Features.Identity.Queries;
 using RhythmicJourney.Application.Features.Identity.Commands;
+using RhythmicJourney.Application.Features.Identity.Common.DTOs;
 
 namespace RhythmicJourney.WebAPI.Controllers;
 
@@ -62,8 +63,8 @@ public class AccountController : ControllerBase
     [HttpPost("renew-tokens")]
     public async Task<IActionResult> RenewAccessToken([FromBody] RenewTokensRequestDTO model, CancellationToken cancellationToken)
     {
-        RenewTokensCommand query = new RenewTokensCommand(model.RefreshToken);
-        AuthenticationResult result = await _mediator.Send(query);
+        RenewTokensCommand command = new RenewTokensCommand(model.RefreshToken);
+        AuthenticationResult result = await _mediator.Send(command);
 
         if (!result.IsSuccess) return Problem
         (

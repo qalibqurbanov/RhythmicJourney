@@ -38,10 +38,10 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResul
             if (userFromDb is null)
                 return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_NOT_EXISTS } });
 
-            if (!await _userRepository.IsPasswordValid(userFromDb, request.Password))
+            if (!await _userRepository.IsPasswordValidAsync(userFromDb, request.Password))
                 return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.INVALID_CREDENTIALS } });
 
-            SignInResult result = await _userRepository.SignIn(request.Email, request.Password);
+            SignInResult result = await _userRepository.SignInAsync(request.Email, request.Password);
 
             if (!result.Succeeded)
             {

@@ -76,7 +76,7 @@ public class TokenGenerator : ITokenGenerator
             signingCredentials: signingCredentials
         );
 
-        return RefreshToken.CreateRefreshToken
+        return RefreshToken.CreateObject
         (
             refreshToken: new JwtSecurityTokenHandler().WriteToken(securityToken),
             expiresOn: DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationInDays)

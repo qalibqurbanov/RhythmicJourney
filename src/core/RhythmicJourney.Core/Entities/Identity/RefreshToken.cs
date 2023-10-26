@@ -28,7 +28,7 @@ public partial class RefreshToken
     /// Bu metoda parametr olaraq verdiyimiz deyerlere sahib olan 'RefreshToken' sinif obyektini yaradir.
     /// </summary>
     /// <returns>Geriye 'RefreshToken' sinifinin yaratmiw oldugu obyektini dondurur.</returns>
-    public static RefreshToken CreateRefreshToken(string refreshToken, DateTime expiresOn)
+    public static RefreshToken CreateObject(string refreshToken, DateTime expiresOn)
     {
         return new RefreshToken()
         {

@@ -9,13 +9,13 @@ namespace RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstrac
 /// </summary>
 public interface IUserRepository
 {
-    Task<AppUser?> GetUserById(int userId);
-    Task<AppUser?> GetUserByEmailAsync(string email);
-    Task<IdentityResult> CreateUserAsync(AppUser user, string password);
-    Task<AppUser?> GetUserByRefreshToken(string refreshToken);
-    Task<SignInResult> SignIn(string email, string password);
-    Task SignOut();
-    Task<bool> IsPasswordValid(AppUser user, string password);
     int Update(AppUser user);
-    Task<IdentityResult> ConfirmEmail(AppUser user, string confirmationToken);
+    Task<AppUser?> GetUserByIdAsync(int userId);
+    Task<AppUser?> GetUserByEmailAsync(string email);
+    Task<AppUser?> GetUserByRefreshTokenAsync(string refreshToken);
+    Task<IdentityResult> CreateUserAsync(AppUser user, string password);
+    Task<IdentityResult> ConfirmEmailAsync(AppUser user, string confirmationToken);
+    Task<SignInResult> SignInAsync(string email, string password);
+    Task SignOutAsync();
+    Task<bool> IsPasswordValidAsync(AppUser user, string password);
 }
