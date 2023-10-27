@@ -2,7 +2,7 @@
 using RhythmicJourney.Core.Entities.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace RhythmicJourney.Persistence.EntityConfigurations.FluentAPI;
+namespace RhythmicJourney.Persistence.EntityConfigurations.FluentAPI.Identity;
 
 public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 {

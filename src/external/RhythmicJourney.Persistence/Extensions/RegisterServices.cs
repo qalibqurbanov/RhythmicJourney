@@ -28,6 +28,8 @@ public static class RegisterServices
         builder.Configuration.Bind(JwtSettings.SectionName, jwtSettings);
         services.AddSingleton<JwtSettings>(jwtSettings);
 
+        services.AddDbContext<RhythmicJourneyStandartDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString_Standart")));
+
         services.AddDbContext<RhythmicJourneyIdentityDbContext>(options =>
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString_Identity"), options =>

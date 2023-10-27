@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using RhythmicJourney.Core.Entities.Identity;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using RhythmicJourney.Persistence.EntityConfigurations.FluentAPI;
+using RhythmicJourney.Persistence.EntityConfigurations.FluentAPI.Identity;
 
 namespace RhythmicJourney.Persistence.Contexts;
 
