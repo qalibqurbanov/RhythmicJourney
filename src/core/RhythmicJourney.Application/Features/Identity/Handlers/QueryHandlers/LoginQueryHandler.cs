@@ -29,38 +29,44 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResul
 
     public async Task<AuthenticationResult> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
-        AppUser userFromDb = await _userRepository.GetUserByEmailAsync(request.Email);
+        AppUser? userFromDb = await _userRepository.GetUserByEmailAsync(request.DTO.Email);
         {
             if (userFromDb is null)
-                return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_NOT_EXISTS } });
-
-            if (!await _userRepository.IsPasswordValidAsync(userFromDb, request.Password))
-                return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.INVALID_CREDENTIALS } });
-
-            SignInResult result = await _userRepository.SignInAsync(request.Email, request.Password);
-
-            if (!result.Succeeded)
             {
-                if (result.IsLockedOut)
+                return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_NOT_EXISTS } });
+            }
+
+            if (!await _userRepository.IsPasswordValidAsync(userFromDb, request.DTO.Password))
+            {
+                return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.INVALID_CREDENTIALS } });
+            }
+
+            SignInResult result = await _userRepository.SignInAsync(request.DTO.Email, request.DTO.Password);
+            {
+                if (!result.Succeeded)
                 {
-                    return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_LOCKED } });
-                }
-                else if (result.IsNotAllowed)
-                {
-                    if (!userFromDb.EmailConfirmed)
+                    if (result.IsLockedOut)
                     {
-                        return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.EMAIL_NOT_CONFIRMED } });
+                        return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_LOCKED } });
                     }
-                    //else if (!userFromDb.PhoneNumberConfirmed)
+                    else if (result.IsNotAllowed)
+                    {
+                        if (!userFromDb.EmailConfirmed)
+                        {
+                            return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.EMAIL_NOT_CONFIRMED } });
+                        }
+                        //else if (!userFromDb.PhoneNumberConfirmed)
+                        //{
+                        //    return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = "Your account is not confirmed. Please confirm your phone number to proceed." } });
+                        //}
+                    }
+                    //else if (result.RequiresTwoFactor)
                     //{
-                    //    return await AuthenticationResult.Failure(new List<IdentityError>() { new IdentityError() { Description = "Your account is not confirmed. Please confirm your phone number to proceed." } });
+                    //    return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = "Please complete the two-factor authentication (2FA) process to access your account." } });
                     //}
                 }
-                //else if (result.RequiresTwoFactor)
-                //{
-                //    return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = "Please complete the two-factor authentication (2FA) process to access your account." } });
-                //}
             }
+
         }
 
         { /* User ucun yeni bir Access ve Refresh Token generate edirik ve dondururuk cliente. Burada hemde generate etdiyimiz hemin bu Refresh Tokeni DB-ya qeyd edirik: */

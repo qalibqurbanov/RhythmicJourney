@@ -27,10 +27,12 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
 
     public async Task<AuthenticationResult> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        AppUser userFromDb = await _userRepository.GetUserByEmailAsync(request.Email);
+        AppUser? userFromDb = await _userRepository.GetUserByEmailAsync(request.DTO.Email);
         {
             if (userFromDb is null)
+            {
                 return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_NOT_EXISTS } });
+            }
         }
 
         {

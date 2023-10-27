@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using RhythmicJourney.Core.Entities.Identity;
@@ -22,11 +21,11 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
 
     public async Task<AuthenticationResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
-        AppUser userFromDb = await _userRepository.GetUserByEmailAsync(request.Email);
+        AppUser? userFromDb = await _userRepository.GetUserByEmailAsync(request.DTO.Email);
         {
             if(userFromDb != null)
             {
-                IdentityResult result = await _userRepository.ResetPasswordAsync(userFromDb, request.ResetPasswordToken, request.Password);
+                IdentityResult result = await _userRepository.ResetPasswordAsync(userFromDb, request.DTO.ResetPasswordToken, request.DTO.Password);
 
                 if (result.Succeeded)
                 {
@@ -38,7 +37,9 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
                 }
             }
             else
+            {
                 return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_NOT_EXISTS } });
+            }
         }
     }
 }

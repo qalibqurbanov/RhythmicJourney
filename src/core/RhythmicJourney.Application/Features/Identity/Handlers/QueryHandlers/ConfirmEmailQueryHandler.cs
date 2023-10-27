@@ -15,32 +15,31 @@ namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 public class ConfirmEmailQueryHandler : IRequestHandler<ConfirmEmailQuery, AuthenticationResult>
 {
     private readonly IUserRepository _userRepository;
-
-    public ConfirmEmailQueryHandler(IUserRepository userRepository)
-    {
-        this._userRepository = userRepository;
-    }
+    public ConfirmEmailQueryHandler(IUserRepository userRepository) => this._userRepository = userRepository;
 
     public async Task<AuthenticationResult> Handle(ConfirmEmailQuery request, CancellationToken cancellationToken)
     {
-        if (request.UserID.IsEmpty() || request.ConfirmationToken.IsEmpty())
+        if (request.DTO.UserID.IsEmpty() || request.DTO.ConfirmationToken.IsEmpty())
+        {
             return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.EMAIL_CONFIRM_URL_INVALID } });
+        }
 
-        AppUser user = await _userRepository.GetUserByIdAsync(int.Parse(request.UserID));
+        AppUser? user = await _userRepository.GetUserByIdAsync(int.Parse(request.DTO.UserID));
         {
             if (user == null)
+            {
                 return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.EMAIL_CONFIRM_URL_INVALID } });
+            }
         }
 
         // byte[] decodedBytesOfToken = WebEncoders.Base64UrlDecode(request.ConfirmationToken);
         // string token = Encoding.UTF8.GetString(decodedBytesOfToken);
 
-        IdentityResult result = await _userRepository.ConfirmEmailAsync(user, request.ConfirmationToken);
+        IdentityResult result = await _userRepository.ConfirmEmailAsync(user, request.DTO.ConfirmationToken);
         {
             if (result.Succeeded)
             {
                 return await AuthenticationResult.SuccessAsync(RhythmicJourney.Core.Constants.IdentityConstants.EMAIL_CONFIRM_SUCCESSFUL);
-
             }
             else
             {

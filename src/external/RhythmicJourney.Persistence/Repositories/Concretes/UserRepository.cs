@@ -45,7 +45,7 @@ public class UserRepository : IUserRepository
     {
         return await _identityDbContext.Users
             .Include(t => t.RefreshTokens)
-            .FirstOrDefaultAsync(t => t.RefreshTokens.Any(r => r.Token.Equals(refreshToken)));
+            .FirstOrDefaultAsync(t => t.RefreshTokens!.Any(r => r.Token.Equals(refreshToken)));
     }
 
     public async Task<IdentityResult> CreateUserAsync(AppUser user, string password)
@@ -55,8 +55,8 @@ public class UserRepository : IUserRepository
 
     public async Task<IdentityResult> ConfirmEmailAsync(AppUser user, string confirmationToken)
     {
-        AppUser userFromDb = await GetUserByIdAsync(user.Id);
-        IdentityResult result = await _userManager.ConfirmEmailAsync(userFromDb, confirmationToken);
+        AppUser? userFromDb = await GetUserByIdAsync(user.Id);
+        IdentityResult result = await _userManager.ConfirmEmailAsync(userFromDb!, confirmationToken);
 
         return result;
     }

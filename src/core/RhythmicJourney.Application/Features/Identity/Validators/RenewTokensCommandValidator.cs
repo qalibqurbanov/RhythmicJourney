@@ -7,7 +7,7 @@ public class RenewTokensCommandValidator : AbstractValidator<RenewTokensCommand>
 {
     public RenewTokensCommandValidator()
     {
-        RuleFor(renewTokensCommand => renewTokensCommand.RefreshToken)
+        RuleFor(renewTokensCommand => renewTokensCommand.DTO.RefreshToken)
             .NotEmpty();
     }
 }

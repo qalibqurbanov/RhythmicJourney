@@ -29,11 +29,11 @@ public partial class AuthenticationResult
 
 public partial class AuthenticationResult
 {
-    public string AccessToken { get; private set; }
-    public string RefreshToken { get; private set; }
+    public string              AccessToken  { get; private set; }
+    public string              RefreshToken { get; private set; }
 
-    public string Message { get; set; }
+    public string              Message      { get; private set; }
 
-    public bool IsSuccess { get; private set; }
-    public List<IdentityError> Errors { get; private set; }
+    public bool                IsSuccess    { get; private set; }
+    public List<IdentityError> Errors       { get; private set; }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable RCS1194
+
+using System;
 
 namespace RhythmicJourney.Core.Exceptions;
 

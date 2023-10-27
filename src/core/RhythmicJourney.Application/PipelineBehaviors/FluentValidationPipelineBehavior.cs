@@ -20,10 +20,7 @@ public class FluentValidationPipelineBehavior<TRequest, TResponse> : IPipelineBe
     where TResponse : AuthenticationResult
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
-    public FluentValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators)
-    {
-        this._validators = validators;
-    }
+    public FluentValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators) => this._validators = validators;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {

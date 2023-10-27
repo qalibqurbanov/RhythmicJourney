@@ -44,48 +44,50 @@ public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, Aut
                 B. Eger userin gondermiw oldugu hemin bu 'Refresh Token'-in omru qurtarmamiw idise revoke/deaktiv edirik ve ardinca usere yeni bir 'Access Token' ve 'Refresh Token' veririk (ve ardinca ise verdiyimiz hemin bu yeni 'Refresh Token'-de DB-e qeyd edirik).
         */
 
-        if (request.RefreshToken.IsEmpty())
+        if (request.DTO.RefreshToken.IsEmpty())
         {
             return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
         }
 
-        bool isRefreshTokenValid = _refreshTokenValidator.Validate(request.RefreshToken);
+        bool isRefreshTokenValid = _refreshTokenValidator.Validate(request.DTO.RefreshToken);
         if (!isRefreshTokenValid)
         {
             return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
         }
 
-        AppUser userFromDb = await _userRepository.GetUserByRefreshTokenAsync(request.RefreshToken);
+        AppUser? userFromDb = await _userRepository.GetUserByRefreshTokenAsync(request.DTO.RefreshToken);
         {
             if (userFromDb == null)
             {
                 return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
             }
-        }
-
-        RefreshToken existingRefreshToken = userFromDb.RefreshTokens.FirstOrDefault(t => t.Token.Equals(request.RefreshToken));
-        {
-            if (existingRefreshToken == null)
-            {
-                return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
-            }
             else
             {
-                /* Userin sahib oldugu Refresh Token revoke/deaktiv olunubsa: */
-                if (!existingRefreshToken.IsActive || existingRefreshToken.RevokedOn.HasValue || DateTime.UtcNow >= existingRefreshToken.ExpiresOn)
+                RefreshToken? existingRefreshToken = userFromDb.RefreshTokens.FirstOrDefault(t => t.Token.Equals(request.DTO.RefreshToken));
                 {
-                    return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_EXPIRED } });
-                }
+                    if (existingRefreshToken == null)
+                    {
+                        return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
+                    }
+                    else
+                    {
+                        /* Userin sahib oldugu Refresh Token revoke/deaktiv olunubsa: */
+                        if (!existingRefreshToken.IsActive || existingRefreshToken.RevokedOn.HasValue || DateTime.UtcNow >= existingRefreshToken.ExpiresOn)
+                        {
+                            return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_EXPIRED } });
+                        }
 
-                { /* Ilk once userin hazirki Refresh Tokenini revoke edirik, ardinca ise Usere yeni bir Access ve Refresh Token generate ederek DB-ya qeyd edirik, ardinca ise dondururuk cliente. */
-                    _refreshTokenRepository.RevokeOldAndExpiredRefreshTokens(userFromDb, request.RefreshToken);
+                        { /* Ilk once userin hazirki Refresh Tokenini revoke edirik, ardinca ise Usere yeni bir Access ve Refresh Token generate ederek DB-ya qeyd edirik, ardinca ise dondururuk cliente. */
+                            _refreshTokenRepository.RevokeOldAndExpiredRefreshTokens(userFromDb, request.DTO.RefreshToken);
 
-                    RefreshToken RT = _tokenGenerator.GenerateRefreshToken();
-                    _refreshTokenRepository.Add(userFromDb, RT);
+                            RefreshToken RT = _tokenGenerator.GenerateRefreshToken();
+                            _refreshTokenRepository.Add(userFromDb, RT);
 
-                    string newAccessToken = _tokenGenerator.GenerateAccessToken(userFromDb);
+                            string newAccessToken = _tokenGenerator.GenerateAccessToken(userFromDb);
 
-                    return await AuthenticationResult.SuccessAsync(newAccessToken, RT.Token);
+                            return await AuthenticationResult.SuccessAsync(newAccessToken, RT.Token);
+                        }
+                    }
                 }
             }
         }

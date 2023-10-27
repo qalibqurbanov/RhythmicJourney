@@ -28,10 +28,12 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
 
     public async Task<AuthenticationResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetUserByEmailAsync(request.Email) is not null)
+        if (await _userRepository.GetUserByEmailAsync(request.DTO.Email) is not null)
+        {
             return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.DUPLICATE_EMAIL } });
+        }
 
-        AppUser newUser = AppUser.CreateObject(request.FirstName, request.LastName, request.Email, request.Email);
+        AppUser newUser = AppUser.CreateObject(request.DTO.FirstName, request.DTO.LastName, request.DTO.Email, request.DTO.Email);
         {
             /*
                 * 'email login' ucun hem 'Email' hem de 'UserEmail' fieldlari uygun email adresi("request.Email") saxlamalidir, bu sebeble her ikisine("Email" ve "UserName") eyni datani("request.Email") verirem.
@@ -39,14 +41,13 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
             */
         }
 
-        IdentityResult result = await _userRepository.CreateUserAsync(newUser, request.Password);
+        IdentityResult result = await _userRepository.CreateUserAsync(newUser, request.DTO.Password);
         {
             if (result.Succeeded)
             {
                 await _emailSender.SendConfirmationMailAsync(newUser);
 
                 return await AuthenticationResult.SuccessAsync(RhythmicJourney.Core.Constants.IdentityConstants.REGISTER_SUCCESSFUL_AND_CONFIRM_EMAIL);
-
             }
             else
             {

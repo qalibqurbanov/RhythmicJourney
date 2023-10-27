@@ -7,11 +7,11 @@ public class ConfirmEmailQueryValidator : AbstractValidator<ConfirmEmailQuery>
 {
     public ConfirmEmailQueryValidator()
     {
-        RuleFor(confirmEmailQuery => confirmEmailQuery.UserID)
+        RuleFor(confirmEmailQuery => confirmEmailQuery.DTO.UserID)
             .NotEmpty()
             .GreaterThan("-1");
 
-        RuleFor(confirmEmailQuery => confirmEmailQuery.ConfirmationToken)
+        RuleFor(confirmEmailQuery => confirmEmailQuery.DTO.ConfirmationToken)
             .NotEmpty();
     }
 }
