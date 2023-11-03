@@ -25,4 +25,9 @@
     <ProjectReference Include="..\..\external\RhythmicJourney.Persistence\RhythmicJourney.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Uploads\Musics\" />
+    <Folder Include="Uploads\Arts\" />
+  </ItemGroup>
+
 </Project>

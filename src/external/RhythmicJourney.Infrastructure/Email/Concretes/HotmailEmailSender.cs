@@ -23,8 +23,8 @@ public partial class HotmailEmailSender : IEmailSender
     public HotmailEmailSender(UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, HotmailSettings mailSettings)
     {
         this._userManager = userManager;
-        this._httpContextAccessor = httpContextAccessor;
         this._linkGenerator = linkGenerator;
+        this._httpContextAccessor = httpContextAccessor;
         this._mailSettings = mailSettings;
     }
 

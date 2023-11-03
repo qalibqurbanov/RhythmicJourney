@@ -12,8 +12,10 @@ using RhythmicJourney.Persistence.Contexts;
 using RhythmicJourney.Core.Entities.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using RhythmicJourney.Persistence.Repositories.Concretes;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions;
+using RhythmicJourney.Persistence.Repositories.Concretes.Music;
+using RhythmicJourney.Persistence.Repositories.Concretes.Identity;
+using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
+using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
 
 namespace RhythmicJourney.Persistence.Extensions;
 
@@ -106,8 +108,12 @@ public static class RegisterServices
             };
         });
 
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        {
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+            services.AddScoped<ISongRepository, SongRepository>();
+        }
 
         return services;
     }

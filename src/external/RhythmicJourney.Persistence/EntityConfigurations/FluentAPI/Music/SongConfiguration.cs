@@ -9,6 +9,7 @@ public class SongConfiguration : IEntityTypeConfiguration<Song>
     public void Configure(EntityTypeBuilder<Song> builder)
     {
         builder
+            .HasQueryFilter(song => !song.IsDeleted)
             .HasKey(song => song.Id);
     }
 }

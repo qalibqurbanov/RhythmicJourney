@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using RhythmicJourney.Application.Features.Identity.Queries;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions;
+using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 
