@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using RhythmicJourney.Core.Entities.Music;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music.Base;
+using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Base;
 
 namespace RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
 
@@ -12,4 +12,5 @@ namespace RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstrac
 public interface ISongRepository : IBaseRepository<Song>
 {
     IQueryable<Song> GetSongs(Expression<Func<Song, bool>> expression = null);
+    bool IsSongExists(int songID);
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music.Base;
+namespace RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Base;
 
 /// <summary>
 /// Umumi funksionalliqlarin imzalarini saxlayir.

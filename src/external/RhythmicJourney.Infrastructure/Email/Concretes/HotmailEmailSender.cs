@@ -16,15 +16,15 @@ namespace RhythmicJourney.Infrastructure.Email.Concretes;
 public partial class HotmailEmailSender : IEmailSender
 {
     private readonly UserManager<AppUser> _userManager;
-    private readonly LinkGenerator _linkGenerator;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly LinkGenerator _linkGenerator;
     private readonly HotmailSettings _mailSettings;
 
     public HotmailEmailSender(UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, HotmailSettings mailSettings)
     {
         this._userManager = userManager;
-        this._linkGenerator = linkGenerator;
         this._httpContextAccessor = httpContextAccessor;
+        this._linkGenerator = linkGenerator;
         this._mailSettings = mailSettings;
     }
 

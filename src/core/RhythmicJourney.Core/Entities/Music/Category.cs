@@ -7,8 +7,8 @@ namespace RhythmicJourney.Core.Entities.Music;
 /// </summary>
 public class Category
 {
-    public int               Id    { get; set; }
-    public string            Name  { get; set; }
+    public int                Id    { get; set; }
+    public string             Name  { get; set; }
 
-    public ICollection<Song> Songs { get; set; }
+    public ICollection<Song>? Songs { get; set; }
 }

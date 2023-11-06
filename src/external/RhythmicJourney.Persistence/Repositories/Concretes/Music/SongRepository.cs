@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using RhythmicJourney.Core.Entities.Music;
 using RhythmicJourney.Persistence.Contexts;
-using RhythmicJourney.Persistence.Repositories.Concretes.Music.Base;
+using RhythmicJourney.Persistence.Repositories.Concretes.Base;
 using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
 
 namespace RhythmicJourney.Persistence.Repositories.Concretes.Music;
@@ -32,6 +32,11 @@ public class SongRepository : BaseRepository<Song>, ISongRepository
         }
 
         return query.Include(song => song.Category);
+    }
+
+    public bool IsSongExists(int songID)
+    {
+        return TableSongs.Where(song => song.Id == songID).Count() > 0 ? true : false;
     }
     #endregion ISongRepository
 }

@@ -7,6 +7,9 @@ using RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 
 namespace RhythmicJourney.Application.Extensions;
 
+/// <summary>
+/// Application qatinin IoC-ye elave etmeli oldugu servisleri elave eden metodlari saxlayir.
+/// </summary>
 public static class RegisterServices
 {
     /// <summary>

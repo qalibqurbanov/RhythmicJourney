@@ -24,7 +24,7 @@ public partial class AuthenticationResult
     /// <summary>
     /// Usere netice olaraq baw vermiw xetani dondurmek isteyirikse bu overloadi iwledirik.
     /// </summary>
-    public static Task<AuthenticationResult> FailureAsync(List<IdentityError> error) => Task.FromResult(new AuthenticationResult() { IsSuccess = false, Errors = error });
+    public static Task<AuthenticationResult> FailureAsync(List<IdentityError> errors) => Task.FromResult(new AuthenticationResult() { IsSuccess = false, Errors = errors });
 }
 
 public partial class AuthenticationResult

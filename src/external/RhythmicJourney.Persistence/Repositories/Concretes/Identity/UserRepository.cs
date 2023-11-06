@@ -19,9 +19,9 @@ public class UserRepository : IUserRepository
 
     public UserRepository(RhythmicJourneyIdentityDbContext identityDbContext, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _identityDbContext = identityDbContext;
+        this._userManager = userManager;
+        this._signInManager = signInManager;
+        this._identityDbContext = identityDbContext;
     }
 
     public int Update(AppUser user)

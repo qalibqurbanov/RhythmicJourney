@@ -8,7 +8,7 @@ public class EditSongCommandValidator : AbstractValidator<EditSongRequestDTO>
     public EditSongCommandValidator()
     {
         RuleFor(editSongRequestDTO => editSongRequestDTO.NewArtistName)
-        .NotEmpty();
+            .NotEmpty();
 
         RuleFor(editSongRequestDTO => editSongRequestDTO.NewSongName)
             .NotEmpty();

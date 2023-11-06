@@ -8,6 +8,9 @@ using RhythmicJourney.Application.Contracts.Infrastructure.Identity.Abstractions
 
 namespace RhythmicJourney.Infrastructure.Extensions;
 
+/// <summary>
+/// Infrastructure qatinin IoC-ye elave etmeli oldugu servisleri elave eden metodlari saxlayir.
+/// </summary>
 public static class RegisterServices
 {
     /// <summary>

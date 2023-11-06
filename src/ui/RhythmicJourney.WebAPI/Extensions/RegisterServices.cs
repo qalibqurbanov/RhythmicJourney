@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace RhythmicJourney.WebAPI.Extensions;
 
+/// <summary>
+/// UI qatinin IoC-ye elave etmeli oldugu servisleri elave eden metodlari saxlayir.
+/// </summary>
 public static class RegisterServices
 {
     /// <summary>
@@ -17,7 +20,14 @@ public static class RegisterServices
     {
         services
             .AddControllers()
-            .AddJsonOptions(options => options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
+            .AddJsonOptions(options =>
+            {
+                /* Appimizin dondureceyi json neticenin 'null' olan uzvlerini return etme: */
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+
+                /* Aralarinda 2 terefli elaqe olan entitylerin serializasiyasi zamani "A possible object cycle was detected..." xetasi yaranir. Helli ucun naviqasiyani/referansi propertysini serializasiyadan gizledirik: */
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
 
         services.AddSwaggerGen(options =>
         {

@@ -19,6 +19,9 @@ using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstraction
 
 namespace RhythmicJourney.Persistence.Extensions;
 
+/// <summary>
+/// Persistence qatinin IoC-ye elave etmeli oldugu servisleri elave eden metodlari saxlayir.
+/// </summary>
 public static class RegisterServices
 {
     /// <summary>
@@ -113,6 +116,7 @@ public static class RegisterServices
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             services.AddScoped<ISongRepository, SongRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
 
         return services;
