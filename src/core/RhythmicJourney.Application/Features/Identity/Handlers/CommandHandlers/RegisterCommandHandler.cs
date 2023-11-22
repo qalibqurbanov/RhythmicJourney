@@ -18,11 +18,13 @@ namespace RhythmicJourney.Application.Features.Identity.Handlers.CommandHandlers
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthenticationResult>
 {
     private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
     private readonly IEmailSender _emailSender;
 
-    public RegisterCommandHandler(IUserRepository userRepository, IEmailSender emailSender)
+    public RegisterCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IEmailSender emailSender)
     {
         this._userRepository = userRepository;
+        this._roleRepository = roleRepository;
         this._emailSender = emailSender;
     }
 
@@ -41,17 +43,27 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
             */
         }
 
-        IdentityResult result = await _userRepository.CreateUserAsync(newUser, request.DTO.Password);
+        IdentityResult userCreationResult = await _userRepository.CreateUserAsync(newUser, request.DTO.Password);
         {
-            if (result.Succeeded)
+            if (userCreationResult.Succeeded)
             {
-                await _emailSender.SendConfirmationMailAsync(newUser);
+                IdentityResult addingUserToRoleResult = await _roleRepository.AddUserToRoleAsync(newUser.Email, "User");
+                {
+                    if(addingUserToRoleResult.Succeeded)
+                    {
+                        await _emailSender.SendConfirmationMailAsync(newUser);
 
-                return await AuthenticationResult.SuccessAsync(RhythmicJourney.Core.Constants.IdentityConstants.REGISTER_SUCCESSFUL_AND_CONFIRM_EMAIL);
+                        return await AuthenticationResult.SuccessAsync(RhythmicJourney.Core.Constants.IdentityConstants.REGISTER_SUCCESSFUL_AND_CONFIRM_EMAIL);
+                    }
+                    else
+                    {
+                        return await AuthenticationResult.FailureAsync(addingUserToRoleResult.Errors.ToList());
+                    }
+                }
             }
             else
             {
-                return await AuthenticationResult.FailureAsync(result.Errors.ToList());
+                return await AuthenticationResult.FailureAsync(userCreationResult.Errors.ToList());
             }
         }
     }

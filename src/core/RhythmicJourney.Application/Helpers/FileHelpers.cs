@@ -10,13 +10,18 @@ namespace RhythmicJourney.Application.Helpers;
 public static class FileHelpers
 {
     /// <summary>
+    /// Userin upload etdiyi musiqi ve artworkleri yukleyeceyim papkamin adini saxlayir.
+    /// </summary>
+    private readonly static string FolderName = "uploads";
+
+    /// <summary>
     /// 'Uploads/Musics' papkasindaki fayli silir
     /// </summary>
     /// <param name="fileName">Silinmesini istediyimiz faylin adi.</param>
     /// <param name="env">Appin run olundugu muhiti temsil eden tip.</param>
     public static void RemoveFromUploads(string fileName, IHostingEnvironment env)
     {
-        string targetFile = Path.Combine(env.ContentRootPath, "uploads", nameof(Uploads.Musics), fileName);
+        string targetFile = Path.Combine(env.ContentRootPath, FolderName, nameof(Uploads.Musics), fileName);
 
         if (File.Exists(targetFile))
         {
@@ -31,7 +36,7 @@ public static class FileHelpers
     /// <param name="env">Appin run olundugu muhiti temsil eden tip.</param>
     public static void RemoveFromArts(string fileName, IHostingEnvironment env)
     {
-        string targetFile = Path.Combine(env.ContentRootPath, "uploads", nameof(Uploads.Arts), fileName);
+        string targetFile = Path.Combine(env.ContentRootPath, FolderName, nameof(Uploads.Arts), fileName);
 
         if (File.Exists(targetFile))
         {

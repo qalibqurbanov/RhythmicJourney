@@ -33,7 +33,13 @@ public static class RegisterServices
         builder.Configuration.Bind(JwtSettings.SectionName, jwtSettings);
         services.AddSingleton<JwtSettings>(jwtSettings);
 
-        services.AddDbContext<RhythmicJourneyStandartDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString_Standart")));
+        services.AddDbContext<RhythmicJourneyStandartDbContext>(options =>
+        {
+            options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString_Standart"), options =>
+            {
+                options.CommandTimeout(30);
+            });
+        });
 
         services.AddDbContext<RhythmicJourneyIdentityDbContext>(options =>
         {
@@ -54,7 +60,7 @@ public static class RegisterServices
             }
         });
 
-        services.AddIdentity<AppUser, IdentityRole<int>>(options =>
+        services.AddIdentity<AppUser, AppRole>(options =>
         {
             options.SignIn.RequireConfirmedAccount = true;
             options.SignIn.RequireConfirmedEmail = true;
@@ -114,6 +120,7 @@ public static class RegisterServices
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
 
             services.AddScoped<ISongRepository, SongRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();

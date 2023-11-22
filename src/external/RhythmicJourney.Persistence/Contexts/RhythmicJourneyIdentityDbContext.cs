@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RhythmicJourney.Core.Entities.Identity;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -14,7 +13,7 @@ namespace RhythmicJourney.Persistence.Contexts;
 /// <summary>
 /// Identity DB-i ile data mubadilesi etmek ucun iwledeceyimiz DbContext sinifi.
 /// </summary>
-public class RhythmicJourneyIdentityDbContext : IdentityDbContext<AppUser, IdentityRole<int>, int>
+public class RhythmicJourneyIdentityDbContext : IdentityDbContext<AppUser, AppRole, int>
 {
     public RhythmicJourneyIdentityDbContext(DbContextOptions<RhythmicJourneyIdentityDbContext> options) : base(options) { }
 

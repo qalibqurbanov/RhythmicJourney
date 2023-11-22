@@ -33,7 +33,7 @@ public partial class CategoryResult
     public static Task<CategoryResult> FailureAsync(List<string> error) => Task.FromResult(new CategoryResult() { Errors = error, IsSuccess = false });
 
     /// <summary>
-    /// Netice olaraq baw vermiw xetani dondurmek isteyirikse bu overloadi iwledirik.
+    /// Netice olaraq baw vermiw xeta haqqinda mesaj dondurmek isteyirikse bu overloadi iwledirik.
     /// </summary>
     public static Task<CategoryResult> FailureAsync(string message) => Task.FromResult(new CategoryResult() { Message = message, IsSuccess = false });
 }

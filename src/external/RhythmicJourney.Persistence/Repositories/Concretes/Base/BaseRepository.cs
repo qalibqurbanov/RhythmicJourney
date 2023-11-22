@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using RhythmicJourney.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Base;
 
@@ -11,10 +10,12 @@ namespace RhythmicJourney.Persistence.Repositories.Concretes.Base;
 /// Umumi funksionalliqlarin implementasiyalarini saxlayir.
 /// </summary>
 /// <typeparam name="TEntity">Uzerinde iw goreceyimiz Entity.</typeparam>
-public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
+public class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity> /* Gundelik ve Identity Db-larini bir-birinden ayirmiwam deye uzerinde iwleyeceyim DB-ni generic olaraq aliram ki, hemin bu base-i tekrar yaratmayim. */
+    where TEntity : class
+    where TContext : DbContext
 {
-    private readonly RhythmicJourneyStandartDbContext _dbContext;
-    public BaseRepository(RhythmicJourneyStandartDbContext dbContext) => _dbContext = dbContext;
+    private readonly TContext _dbContext;
+    public BaseRepository(TContext dbContext) => this._dbContext = dbContext;
 
     private DbSet<TEntity> Table_TEntity => _dbContext.Set<TEntity>();
 

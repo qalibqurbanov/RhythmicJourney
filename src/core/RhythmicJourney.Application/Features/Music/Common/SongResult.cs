@@ -22,9 +22,9 @@ public partial class SongResult
     public static Task<SongResult> SuccessAsync(string message) => Task.FromResult(new SongResult() { Message = message, IsSuccess = true });
 
     /// <summary>
-    /// Netice olaraq baw vermiw xetani dondurmek isteyirikse bu overloadi iwledirik.
+    /// Netice olaraq baw vermiw xeta haqqinda mesaj dondurmek isteyirikse bu overloadi iwledirik.
     /// </summary>
-    public static Task<SongResult> FailureAsync(List<string> errors) => Task.FromResult(new SongResult() { IsSuccess = false, Errors = errors });
+    public static Task<SongResult> FailureAsync(string message) => Task.FromResult(new SongResult() { IsSuccess = false, Message = message});
 }
 
 public partial class SongResult
@@ -34,5 +34,4 @@ public partial class SongResult
     public string Message { get; private set; }
 
     public bool IsSuccess { get; private set; }
-    public List<string> Errors { get; private set; }
 }

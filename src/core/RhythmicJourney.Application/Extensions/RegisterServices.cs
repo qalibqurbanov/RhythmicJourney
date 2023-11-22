@@ -17,18 +17,25 @@ public static class RegisterServices
     /// </summary>
     public static IServiceCollection RegisterApplicationServices(this IServiceCollection services)
     {
-        services.AddMediatR(cfg =>
         {
-            cfg.Lifetime = ServiceLifetime.Scoped; /* Elave edilen servislerin omru ne qeder olsun? default: 'Transient' (Requst ve Notification handlerleri 'Scoped', 'Behavior'-lar ise 'Transient' olmalidir) */
+            services.AddMediatR(cfg =>
+            {
+                cfg.Lifetime = ServiceLifetime.Scoped; /* Elave edilen servislerin omru ne qeder olsun? default: 'Transient' (Requst ve Notification handlerleri 'Scoped', 'Behavior'-lar ise 'Transient' olmalidir) */
 
-            cfg.RegisterServicesFromAssembly(typeof(LoginQueryHandler).Assembly);
-        });
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
+                cfg.RegisterServicesFromAssembly(typeof(LoginQueryHandler).Assembly);
+            });
 
-        services.AddValidatorsFromAssembly(typeof(LoginQueryValidator).Assembly);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
+        }
 
-        services.AddHttpContextAccessor();
+        {
+            services.AddValidatorsFromAssembly(typeof(LoginQueryValidator).Assembly);
+        }
+
+        {
+            services.AddHttpContextAccessor();
+        }
 
         return services;
     }

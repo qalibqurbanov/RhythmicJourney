@@ -16,7 +16,7 @@ namespace RhythmicJourney.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "MODERATOR, ADMIN")]
 public class CategoryController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -86,9 +86,9 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost("delete-category/{CategoryID}")]
-    public async Task<IActionResult> DeleteCategory([FromRoute] CategoryIdentityDTO model, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteCategory([FromRoute] CategoryIdentityDTO categoryIdentityDTO, CancellationToken cancellationToken)
     {
-        DeleteCategoryCommand command = new DeleteCategoryCommand(model);
+        DeleteCategoryCommand command = new DeleteCategoryCommand(categoryIdentityDTO);
         CategoryResult result = await _mediator.Send(command, cancellationToken);
 
         if (!result.IsSuccess) return Problem

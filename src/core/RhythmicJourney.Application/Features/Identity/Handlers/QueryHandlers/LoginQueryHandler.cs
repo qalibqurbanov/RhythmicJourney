@@ -73,7 +73,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResul
             RefreshToken RT = _tokenGenerator.GenerateRefreshToken();
             _refreshTokenRepository.Add(userFromDb, RT);
 
-            string newAccessToken = _tokenGenerator.GenerateAccessToken(userFromDb);
+            string newAccessToken = await _tokenGenerator.GenerateAccessTokenAsync(userFromDb);
 
             return await AuthenticationResult.SuccessAsync(newAccessToken, RT.Token);
         }

@@ -5,7 +5,7 @@ using RhythmicJourney.Core.Entities.Identity;
 namespace RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
 
 /// <summary>
-/// Istifadeci/Istifadeciler ile elaqeli emeliyyatlarin imzalarini saxlayir.
+/// Istifadeciler ile elaqeli emeliyyatlarin imzalarini saxlayir.
 /// </summary>
 public interface IUserRepository
 {
@@ -19,4 +19,5 @@ public interface IUserRepository
     Task<SignInResult> SignInAsync(string email, string password);
     Task SignOutAsync();
     Task<bool> IsPasswordValidAsync(AppUser user, string password);
+    Task<bool> IsUserExistsAsync(int UserID);
 }

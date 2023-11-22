@@ -12,7 +12,7 @@ namespace RhythmicJourney.Persistence.Repositories.Concretes.Music;
 /// <summary>
 /// Musiqi ile elaqeli funksionalliqlarin implementasiyalarini saxlayir.
 /// </summary>
-public class SongRepository : BaseRepository<Song>, ISongRepository
+public class SongRepository : BaseRepository<Song, RhythmicJourneyStandartDbContext>, ISongRepository
 {
     private readonly RhythmicJourneyStandartDbContext _dbContext;
     public SongRepository(RhythmicJourneyStandartDbContext dbContext) : base(dbContext) => this._dbContext = dbContext;

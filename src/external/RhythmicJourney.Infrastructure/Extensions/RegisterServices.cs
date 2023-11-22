@@ -18,14 +18,19 @@ public static class RegisterServices
     /// </summary>
     public static IServiceCollection RegisterInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<ITokenGenerator, TokenGenerator>();
-        services.AddScoped<IRefreshTokenValidator, RefreshTokenValidator>();
+        {
+            services.AddScoped<ITokenGenerator, TokenGenerator>();
+            services.AddScoped<IRefreshTokenValidator, RefreshTokenValidator>();
 
-        HotmailSettings mailSettings = new HotmailSettings();
-        configuration.Bind(HotmailSettings.SectionName, mailSettings);
-        services.AddSingleton<HotmailSettings>(mailSettings);
+        }
 
-        services.AddScoped<IEmailSender, HotmailEmailSender>();
+        {
+            HotmailSettings mailSettings = new HotmailSettings();
+            configuration.Bind(HotmailSettings.SectionName, mailSettings);
+            services.AddSingleton<HotmailSettings>(mailSettings);
+
+            services.AddScoped<IEmailSender, HotmailEmailSender>();
+        }
 
         return services;
     }

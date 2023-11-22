@@ -28,19 +28,20 @@ public class DeleteSongCommandHandler : IRequestHandler<DeleteSongCommand, SongR
     public async Task<SongResult> Handle(DeleteSongCommand request, CancellationToken cancellationToken)
     {
         int userID = int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue("UserID"));
-
-        Song song = _songRepository.GetSongs(song => (song.Id == request.DTO.SongID) && (song.UploaderID == userID)).FirstOrDefault();
         {
-            if (song == null)
+            Song song = _songRepository.GetSongs(song => (song.Id == request.DTO.SongID) && (song.UploaderID == userID)).FirstOrDefault();
             {
-                return await SongResult.FailureAsync(new System.Collections.Generic.List<string>() { $"Song with ID {request.DTO.SongID} not found!" });
+                if (song == null)
+                {
+                    return await SongResult.FailureAsync($"Song with ID {request.DTO.SongID} not found!");
+                }
             }
-        }
 
-        {
-            int affectedRowCount = _songRepository.Remove(song);
+            {
+                int affectedRowCount = _songRepository.Remove(song);
 
-            return await SongResult.SuccessAsync($"Deleted {affectedRowCount} data.");
+                return await SongResult.SuccessAsync($"Deleted {affectedRowCount} data.");
+            }
         }
     }
 }

@@ -1,3 +1,4 @@
+using RhythmicJourney.Persistence;
 using Microsoft.AspNetCore.Builder;
 using RhythmicJourney.WebAPI.Extensions;
 using RhythmicJourney.Application.Extensions;
@@ -21,6 +22,8 @@ public class Program
 
         WebApplication app = builder.Build();
         {
+            SeedIdentityDatabase.SeedDatabaseAsync(app.Services).Wait();
+
             app.AddMiddlewares();
         }
 

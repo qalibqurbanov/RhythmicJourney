@@ -9,7 +9,7 @@ using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstraction
 namespace RhythmicJourney.Persistence.Repositories.Concretes.Identity;
 
 /// <summary>
-/// Istifadeci/Istifadeciler ile elaqeli emeliyyatlarin saxlayir.
+/// Istifadeciler ile elaqeli emeliyyatlarin implementasiyalarini saxlayir.
 /// </summary>
 public class UserRepository : IUserRepository
 {
@@ -19,11 +19,12 @@ public class UserRepository : IUserRepository
 
     public UserRepository(RhythmicJourneyIdentityDbContext identityDbContext, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
     {
+        this._identityDbContext = identityDbContext;
         this._userManager = userManager;
         this._signInManager = signInManager;
-        this._identityDbContext = identityDbContext;
     }
 
+    #region IUserRepository
     public int Update(AppUser user)
     {
         _identityDbContext.Users.Update(user);
@@ -80,4 +81,10 @@ public class UserRepository : IUserRepository
     {
         await _signInManager.SignOutAsync();
     }
+
+    public async Task<bool> IsUserExistsAsync(int UserID)
+    {
+        return await _userManager.Users.AnyAsync(user => user.Id == UserID);
+    }
+    #endregion IUserRepository
 }

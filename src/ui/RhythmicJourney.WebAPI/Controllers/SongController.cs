@@ -1,10 +1,7 @@
-﻿using System;
-using MediatR;
-using System.Linq;
+﻿using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,7 +14,7 @@ namespace RhythmicJourney.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "USER")]
 public class SongController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -41,11 +38,7 @@ public class SongController : ControllerBase
         AddSongCommand command = new AddSongCommand(model);
         SongResult result = await _mediator.Send(command, cancellationToken);
 
-        if(!result.IsSuccess) return Problem
-        (
-            statusCode: StatusCodes.Status400BadRequest,
-            title: string.Join(Environment.NewLine, result.Errors.Select(error => error))
-        );
+        if (!result.IsSuccess) return BadRequest(result);
 
         return Ok(result);
     }
@@ -56,26 +49,18 @@ public class SongController : ControllerBase
         EditSongCommand command = new EditSongCommand(model, songIdentityDTO);
         SongResult result = await _mediator.Send(command, cancellationToken);
 
-        if (!result.IsSuccess) return Problem
-        (
-            statusCode: StatusCodes.Status400BadRequest,
-            title: string.Join(Environment.NewLine, result.Errors.Select(error => error))
-        );
+        if (!result.IsSuccess) return BadRequest(result);
 
         return Ok(result);
     }
 
     [HttpDelete("remove-song/{SongID}")]
-    public async Task<IActionResult> RemoveSong([FromRoute] SongIdentityDTO model, CancellationToken cancellationToken)
+    public async Task<IActionResult> RemoveSong([FromRoute] SongIdentityDTO songIdentityDTO, CancellationToken cancellationToken)
     {
-        DeleteSongCommand command = new DeleteSongCommand(model);
+        DeleteSongCommand command = new DeleteSongCommand(songIdentityDTO);
         SongResult result = await _mediator.Send(command, cancellationToken);
 
-        if (!result.IsSuccess) return Problem
-        (
-            statusCode: StatusCodes.Status400BadRequest,
-            title: string.Join(Environment.NewLine, result.Errors.Select(error => error))
-        );
+        if (!result.IsSuccess) return BadRequest(result);
 
         return Ok(result);
     }

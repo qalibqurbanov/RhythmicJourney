@@ -33,7 +33,7 @@ public class EditSongCommandHandler : IRequestHandler<EditSongCommand, SongResul
         {
             if (song == null)
             {
-                return await SongResult.FailureAsync(new System.Collections.Generic.List<string>() { $"Song with ID {request.songIdentityDTO.SongID} not found!" });
+                return await SongResult.FailureAsync($"Song with ID {request.songIdentityDTO.SongID} not found!");
             }
         }
 
