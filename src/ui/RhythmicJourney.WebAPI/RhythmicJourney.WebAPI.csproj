@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,10 +18,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\core\RhythmicJourney.Application\RhythmicJourney.Application.csproj" />
     <ProjectReference Include="..\..\external\RhythmicJourney.Infrastructure\RhythmicJourney.Infrastructure.csproj" />
     <ProjectReference Include="..\..\external\RhythmicJourney.Persistence\RhythmicJourney.Persistence.csproj" />
   </ItemGroup>

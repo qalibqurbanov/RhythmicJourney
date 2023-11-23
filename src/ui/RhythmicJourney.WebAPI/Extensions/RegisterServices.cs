@@ -1,8 +1,12 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using Microsoft.OpenApi.Models;
 using Microsoft.Net.Http.Headers;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using System.Text.Json.Serialization;
+using RhythmicJourney.WebAPI.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -31,30 +35,59 @@ public static class RegisterServices
 
         services.AddSwaggerGen(options =>
         {
-            options.AddSecurityDefinition("accessToken", new OpenApiSecurityScheme
             {
-                Scheme = JwtBearerDefaults.AuthenticationScheme,
-                In = ParameterLocation.Header,
-                Name = HeaderNames.Authorization,
-                BearerFormat = "JWT",
-                Type = SecuritySchemeType.Http,
-                Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')"
-                /* Description = "JWT Authorization header using the Bearer scheme.\r\n\r\nEnter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: 'Bearer 12345abcdef'" */
-            });
-
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement /* <=- Bu "Dictionary<OpenApiSecurityScheme, IList<string>>" tipli bir "Dictionary<TKey, TValue>" kolleksiyasidir */
-            {
+                options.AddSecurityDefinition("accessToken", new OpenApiSecurityScheme
                 {
-                    new OpenApiSecurityScheme
+                    Scheme = JwtBearerDefaults.AuthenticationScheme,
+                    In = ParameterLocation.Header,
+                    Name = HeaderNames.Authorization,
+                    BearerFormat = "JWT",
+                    Type = SecuritySchemeType.Http,
+                    Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement /* <=- Bu "Dictionary<OpenApiSecurityScheme, IList<string>>" tipli bir "Dictionary<TKey, TValue>" kolleksiyasidir */
+                {
                     {
-                        Reference = new OpenApiReference
+                        new OpenApiSecurityScheme
                         {
-                            Id = "accessToken",
-                            Type = ReferenceType.SecurityScheme
-                        }
-                    }, new List<string>()
-                }
-            });
+                            Reference = new OpenApiReference
+                            {
+                                Id = "accessToken",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        }, new List<string>()
+                    }
+                });
+            }
+
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "RhythmicJourney",
+                    Description = "API backend supporting CRUD and more.",
+                    TermsOfService = new Uri("https://numune.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Elaqe",
+                        Url = new Uri("https://numune.com/contact")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Lisenziya",
+                        Url = new Uri("https://numune.com/license")
+                    }
+                });
+            }
+
+            {
+                /* Controllerdeki dokumentasiyalar hansi fayla yazilib ve hansi fayldan oxunsun ('Swagger UI'-da gosterilmesi ucun)?: */
+                Assembly apiAssembly = typeof(AccountController).Assembly;
+                string documentationFileName = $"{apiAssembly.GetName().Name}.xml";
+                string documentationFilePath = Path.Combine(AppContext.BaseDirectory, documentationFileName);
+                options.IncludeXmlComments(documentationFilePath);
+            }
         });
 
         // services.AddRouting(cfg =>

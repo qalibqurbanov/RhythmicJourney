@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\core\RhythmicJourney.Application\RhythmicJourney.Application.csproj" />
     <ProjectReference Include="..\RhythmicJourney.Persistence\RhythmicJourney.Persistence.csproj" />
   </ItemGroup>
 

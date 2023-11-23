@@ -11,7 +11,20 @@ public static class SetupMiddlewares
     /// </summary>
     public static void AddMiddlewares(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); }
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger(options =>
+            {
+                options.RouteTemplate = "docs/{documentName}/docs.json";
+            });
+
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/docs/v1/docs.json", "RhythmicJourney API v1");
+                options.RoutePrefix = "docs";
+            });
+        }
+
         app.UseHttpsRedirection();
 
         app.UseAuthentication();
