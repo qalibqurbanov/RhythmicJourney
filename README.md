@@ -20,4 +20,4 @@
 
 # :sparkles: Exploring API with Swagger UI.
 ```URL: "domain:port/docs" (example: "localhost:7165/docs" or "someName.az/docs")```
-> ![RhythmicJourney_SwaggerUI](https://i.ibb.co/QnZGX2m/Rhythmic-Journey-Swagger-UI.png)
+> ![RhythmicJourney_SwaggerUI](https://i.ibb.co/CnYx94J/Rhythmic-Journey-Swagger-UI.png)
