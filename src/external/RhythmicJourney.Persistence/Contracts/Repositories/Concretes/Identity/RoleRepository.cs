@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RhythmicJourney.Persistence.Contexts;
 using RhythmicJourney.Core.Entities.Identity;
-using RhythmicJourney.Persistence.Repositories.Concretes.Base;
+using RhythmicJourney.Persistence.Contracts.Repositories.Concretes.Base;
 using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
 
-namespace RhythmicJourney.Persistence.Repositories.Concretes.Identity;
+namespace RhythmicJourney.Persistence.Contracts.Repositories.Concretes.Identity;
 
 /// <summary>
 /// Rollar ile elaqeli emeliyyatlarin implementasiyalarini saxlayir.

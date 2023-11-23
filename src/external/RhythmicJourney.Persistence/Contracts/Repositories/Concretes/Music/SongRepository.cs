@@ -4,10 +4,10 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using RhythmicJourney.Core.Entities.Music;
 using RhythmicJourney.Persistence.Contexts;
-using RhythmicJourney.Persistence.Repositories.Concretes.Base;
+using RhythmicJourney.Persistence.Contracts.Repositories.Concretes.Base;
 using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
 
-namespace RhythmicJourney.Persistence.Repositories.Concretes.Music;
+namespace RhythmicJourney.Persistence.Contracts.Repositories.Concretes.Music;
 
 /// <summary>
 /// Musiqi ile elaqeli funksionalliqlarin implementasiyalarini saxlayir.
@@ -15,14 +15,14 @@ namespace RhythmicJourney.Persistence.Repositories.Concretes.Music;
 public class SongRepository : BaseRepository<Song, RhythmicJourneyStandartDbContext>, ISongRepository
 {
     private readonly RhythmicJourneyStandartDbContext _dbContext;
-    public SongRepository(RhythmicJourneyStandartDbContext dbContext) : base(dbContext) => this._dbContext = dbContext;
+    public SongRepository(RhythmicJourneyStandartDbContext dbContext) : base(dbContext) => _dbContext = dbContext;
 
-    private DbSet<Song> TableSongs => this._dbContext.Set<Song>();
+    private DbSet<Song> TableSongs => _dbContext.Set<Song>();
 
     #region ISongRepository
     public IQueryable<Song> GetSongs(Expression<Func<Song, bool>> expression = null)
     {
-        var query = this.TableSongs
+        var query = TableSongs
             .AsNoTracking()
             .AsQueryable();
 

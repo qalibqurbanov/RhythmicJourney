@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using RhythmicJourney.Application.Features.Role.Common;
 using RhythmicJourney.Application.Features.Role.Commands;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Role.Handlers.CommandHandlers;
 
@@ -15,22 +15,16 @@ namespace RhythmicJourney.Application.Features.Role.Handlers.CommandHandlers;
 /// </summary>
 public class DeleteUserFromRoleCommandHandler : IRequestHandler<DeleteUserFromRoleCommand, RoleResult>
 {
-    private readonly IRoleRepository _roleRepository;
-    private readonly IUserRepository _userRepository;
-
-    public DeleteUserFromRoleCommandHandler(IRoleRepository roleRepository, IUserRepository userRepository)
-    {
-        this._roleRepository = roleRepository;
-        this._userRepository = userRepository;
-    }
+    private readonly IUnitOfWork _unitOfWork;
+    public DeleteUserFromRoleCommandHandler(IUnitOfWork unitOfWork) => this._unitOfWork = unitOfWork;
 
     public async Task<RoleResult> Handle(DeleteUserFromRoleCommand request, CancellationToken cancellationToken)
     {
-        if (await _userRepository.IsUserExistsAsync(request.DTO.UserID))
+        if (await _unitOfWork.UserRepository.IsUserExistsAsync(request.DTO.UserID))
         {
-            if (await _roleRepository.IsRoleExistsAsync(request.DTO.RoleID))
+            if (await _unitOfWork.RoleRepository.IsRoleExistsAsync(request.DTO.RoleID))
             {
-                IdentityResult result = await _roleRepository.DeleteUserFromRoleAsync(request.DTO.UserID, request.DTO.RoleID);
+                IdentityResult result = await _unitOfWork.RoleRepository.DeleteUserFromRoleAsync(request.DTO.UserID, request.DTO.RoleID);
 
                 if (!result.Succeeded)
                 {

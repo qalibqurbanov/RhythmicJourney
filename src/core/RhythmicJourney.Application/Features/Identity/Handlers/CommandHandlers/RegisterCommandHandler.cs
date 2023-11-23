@@ -8,7 +8,7 @@ using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Features.Identity.Common;
 using RhythmicJourney.Application.Features.Identity.Commands;
 using RhythmicJourney.Application.Contracts.Infrastructure.Email.Abstractions;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.CommandHandlers;
 
@@ -17,20 +17,18 @@ namespace RhythmicJourney.Application.Features.Identity.Handlers.CommandHandlers
 /// </summary>
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthenticationResult>
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IRoleRepository _roleRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IEmailSender _emailSender;
 
-    public RegisterCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IEmailSender emailSender)
+    public RegisterCommandHandler(IUnitOfWork unitOfWork, IEmailSender emailSender)
     {
-        this._userRepository = userRepository;
-        this._roleRepository = roleRepository;
+        this._unitOfWork = unitOfWork;
         this._emailSender = emailSender;
     }
 
     public async Task<AuthenticationResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetUserByEmailAsync(request.DTO.Email) is not null)
+        if (await _unitOfWork.UserRepository.GetUserByEmailAsync(request.DTO.Email) is not null)
         {
             return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.DUPLICATE_EMAIL } });
         }
@@ -43,11 +41,11 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
             */
         }
 
-        IdentityResult userCreationResult = await _userRepository.CreateUserAsync(newUser, request.DTO.Password);
+        IdentityResult userCreationResult = await _unitOfWork.UserRepository.CreateUserAsync(newUser, request.DTO.Password);
         {
             if (userCreationResult.Succeeded)
             {
-                IdentityResult addingUserToRoleResult = await _roleRepository.AddUserToRoleAsync(newUser.Email, "User");
+                IdentityResult addingUserToRoleResult = await _unitOfWork.RoleRepository.AddUserToRoleAsync(newUser.Email, "USER");
                 {
                     if(addingUserToRoleResult.Succeeded)
                     {

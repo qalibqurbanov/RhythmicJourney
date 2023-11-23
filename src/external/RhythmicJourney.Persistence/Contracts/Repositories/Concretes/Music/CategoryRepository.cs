@@ -4,10 +4,10 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using RhythmicJourney.Core.Entities.Music;
 using RhythmicJourney.Persistence.Contexts;
-using RhythmicJourney.Persistence.Repositories.Concretes.Base;
+using RhythmicJourney.Persistence.Contracts.Repositories.Concretes.Base;
 using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
 
-namespace RhythmicJourney.Persistence.Repositories.Concretes.Music;
+namespace RhythmicJourney.Persistence.Contracts.Repositories.Concretes.Music;
 
 /// <summary>
 /// Kateqoriya ile elaqeli funksionalliqlarin implementasiyalarini saxlayir.
@@ -15,15 +15,15 @@ namespace RhythmicJourney.Persistence.Repositories.Concretes.Music;
 public class CategoryRepository : BaseRepository<Category, RhythmicJourneyStandartDbContext>, ICategoryRepository
 {
     private readonly RhythmicJourneyStandartDbContext _dbContext;
-    public CategoryRepository(RhythmicJourneyStandartDbContext dbContext) : base(dbContext) => this._dbContext = dbContext;
+    public CategoryRepository(RhythmicJourneyStandartDbContext dbContext) : base(dbContext) => _dbContext = dbContext;
 
-    private DbSet<Category> TableCategories => this._dbContext.Set<Category>();
-    private DbSet<Song> TableSongs => this._dbContext.Set<Song>();
+    private DbSet<Category> TableCategories => _dbContext.Set<Category>();
+    private DbSet<Song> TableSongs => _dbContext.Set<Song>();
 
     #region ICategoryRepository
     public IQueryable<Category> GetCategories(Expression<Func<Category, bool>> expression = null)
     {
-        var query = this.TableCategories.AsNoTracking();
+        var query = TableCategories.AsNoTracking();
 
         if (expression != null)
         {
@@ -43,14 +43,11 @@ public class CategoryRepository : BaseRepository<Category, RhythmicJourneyStanda
         return songs;
     }
 
-    public int AddSongToCategory(int songID, int categoryID)
+    public void AddSongToCategory(int songID, int categoryID)
     {
         Song song = TableSongs.FirstOrDefault(song => song.Id == songID);
         {
             song.CategoryId = categoryID;
-
-            int affectedRowCount = _dbContext.SaveChanges();
-            return affectedRowCount;
         }
     }
 

@@ -9,7 +9,7 @@ using RhythmicJourney.Core.Entities.Music;
 using RhythmicJourney.Application.Extensions;
 using RhythmicJourney.Application.Features.Music.Common;
 using RhythmicJourney.Application.Features.Music.Commands;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Music.Handlers.CommandHandlers;
 
@@ -18,13 +18,13 @@ namespace RhythmicJourney.Application.Features.Music.Handlers.CommandHandlers;
 /// </summary>
 public class AddSongCommandHandler : IRequestHandler<AddSongCommand, SongResult>
 {
-    private readonly ISongRepository _songRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IHostingEnvironment _hostingEnvironment;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AddSongCommandHandler(ISongRepository songRepository, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
+    public AddSongCommandHandler(IUnitOfWork unitOfWork, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
     {
-        this._songRepository = songRepository;
+        this._unitOfWork = unitOfWork;
         this._hostingEnvironment = hostingEnvironment;
         this._httpContextAccessor = httpContextAccessor;
     }
@@ -46,7 +46,8 @@ public class AddSongCommandHandler : IRequestHandler<AddSongCommand, SongResult>
         };
 
         {
-            int affectedRowCount = _songRepository.Add(song);
+            _unitOfWork.SongRepository.Add(song);
+            int affectedRowCount = await _unitOfWork.SaveChangesToDB_StandartDb();
 
             return await SongResult.SuccessAsync($"Added {affectedRowCount} data.");
         }

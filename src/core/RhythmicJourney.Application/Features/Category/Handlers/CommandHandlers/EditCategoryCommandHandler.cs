@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using RhythmicJourney.Application.Features.Category.Common;
 using RhythmicJourney.Application.Features.Category.Commands;
 using Kateqoriya = RhythmicJourney.Core.Entities.Music.Category;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Category.Handlers.CommandHandlers;
 
@@ -14,12 +14,12 @@ namespace RhythmicJourney.Application.Features.Category.Handlers.CommandHandlers
 /// </summary>
 public class EditCategoryCommandHandler : IRequestHandler<EditCategoryCommand, CategoryResult>
 {
-    private readonly ICategoryRepository _categoryRepository;
-    public EditCategoryCommandHandler(ICategoryRepository categoryRepository) => this._categoryRepository = categoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    public EditCategoryCommandHandler(IUnitOfWork unitOfWork) => this._unitOfWork = unitOfWork;
 
     public async Task<CategoryResult> Handle(EditCategoryCommand request, CancellationToken cancellationToken)
     {
-        Kateqoriya category = _categoryRepository.GetCategories(cat => cat.Id == request.categoryIdentityDTO.CategoryID).FirstOrDefault();
+        Kateqoriya category = _unitOfWork.CategoryRepository.GetCategories(cat => cat.Id == request.categoryIdentityDTO.CategoryID).FirstOrDefault();
         {
             if (category == null)
             {
@@ -32,7 +32,8 @@ public class EditCategoryCommandHandler : IRequestHandler<EditCategoryCommand, C
                 }
 
                 {
-                    int affectedRowCount = _categoryRepository.Edit(category);
+                    _unitOfWork.CategoryRepository.Edit(category);
+                    int affectedRowCount = await _unitOfWork.SaveChangesToDB_StandartDb();
 
                     return await CategoryResult.SuccessAsync($"Updated {affectedRowCount} data.");
                 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using RhythmicJourney.Core.Entities.Music;
 using RhythmicJourney.Application.Features.Music.Common;
 using RhythmicJourney.Application.Features.Music.Commands;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Music.Handlers.CommandHandlers;
 
@@ -16,12 +16,12 @@ namespace RhythmicJourney.Application.Features.Music.Handlers.CommandHandlers;
 /// </summary>
 public class DeleteSongCommandHandler : IRequestHandler<DeleteSongCommand, SongResult>
 {
-    private readonly ISongRepository _songRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public DeleteSongCommandHandler(ISongRepository songRepository, IHttpContextAccessor httpContextAccessor)
+    public DeleteSongCommandHandler(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
     {
-        this._songRepository = songRepository;
+        this._unitOfWork = unitOfWork;
         this._httpContextAccessor = httpContextAccessor;
     }
 
@@ -29,7 +29,7 @@ public class DeleteSongCommandHandler : IRequestHandler<DeleteSongCommand, SongR
     {
         int userID = int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue("UserID"));
         {
-            Song song = _songRepository.GetSongs(song => (song.Id == request.DTO.SongID) && (song.UploaderID == userID)).FirstOrDefault();
+            Song song = _unitOfWork.SongRepository.GetSongs(song => (song.Id == request.DTO.SongID) && (song.UploaderID == userID)).FirstOrDefault();
             {
                 if (song == null)
                 {
@@ -38,7 +38,8 @@ public class DeleteSongCommandHandler : IRequestHandler<DeleteSongCommand, SongR
             }
 
             {
-                int affectedRowCount = _songRepository.Remove(song);
+                _unitOfWork.SongRepository.Remove(song);
+                int affectedRowCount = await _unitOfWork.SaveChangesToDB_StandartDb();
 
                 return await SongResult.SuccessAsync($"Deleted {affectedRowCount} data.");
             }

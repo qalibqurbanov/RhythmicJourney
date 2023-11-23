@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Features.Role.Common;
 using RhythmicJourney.Application.Features.Role.Commands;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Role.Handlers.CommandHandlers;
 
@@ -13,18 +13,19 @@ namespace RhythmicJourney.Application.Features.Role.Handlers.CommandHandlers;
 /// </summary>
 public class DeleteRoleCommandHandler : IRequestHandler<DeleteRoleCommand, RoleResult>
 {
-    private readonly IRoleRepository _roleRepository;
-    public DeleteRoleCommandHandler(IRoleRepository roleRepository) => this._roleRepository = roleRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    public DeleteRoleCommandHandler(IUnitOfWork unitOfWork) => this._unitOfWork = unitOfWork;
 
     public async Task<RoleResult> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
     {
-        bool isRoleExists = await _roleRepository.IsRoleExistsAsync(request.DTO.RoleID);
+        bool isRoleExists = await _unitOfWork.RoleRepository.IsRoleExistsAsync(request.DTO.RoleID);
         {
             if (isRoleExists)
             {
-                AppRole role = _roleRepository.GetRoleById(request.DTO.RoleID);
+                AppRole role = _unitOfWork.RoleRepository.GetRoleById(request.DTO.RoleID);
                 {
-                    int affectedRowCount = _roleRepository.Remove(role);
+                    _unitOfWork.RoleRepository.Remove(role);
+                    int affectedRowCount = await _unitOfWork.SaveChangesToDB_IdentityDb();
 
                     return await RoleResult.SuccessAsync($"Deleted {affectedRowCount} data.");
                 }

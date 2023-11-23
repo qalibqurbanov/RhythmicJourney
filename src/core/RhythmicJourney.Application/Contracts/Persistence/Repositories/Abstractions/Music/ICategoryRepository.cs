@@ -13,6 +13,6 @@ public interface ICategoryRepository : IBaseRepository<Category>
 {
     IQueryable<Category> GetCategories(Expression<Func<Category, bool>> expression = null);
     IQueryable<Song> GetSongsByCategory(int categoryID);
-    int AddSongToCategory(int songID, int categoryID);
+    void AddSongToCategory(int songID, int categoryID);
     bool IsCategoryExists(int categoryID);
 }

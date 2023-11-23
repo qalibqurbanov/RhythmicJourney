@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using RhythmicJourney.Application.Features.Category.Common;
 using RhythmicJourney.Application.Features.Category.Commands;
 using Kateqoriya = RhythmicJourney.Core.Entities.Music.Category;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Category.Handlers.CommandHandlers;
 
@@ -13,8 +13,8 @@ namespace RhythmicJourney.Application.Features.Category.Handlers.CommandHandlers
 /// </summary>
 public class AddCategoryCommandHandler : IRequestHandler<AddCategoryCommand, CategoryResult>
 {
-    private readonly ICategoryRepository _categoryRepository;
-    public AddCategoryCommandHandler(ICategoryRepository categoryRepository) => this._categoryRepository = categoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    public AddCategoryCommandHandler(IUnitOfWork unitOfWork) => this._unitOfWork = unitOfWork;
 
     public async Task<CategoryResult> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
     {
@@ -24,7 +24,8 @@ public class AddCategoryCommandHandler : IRequestHandler<AddCategoryCommand, Cat
         };
 
         {
-            int affectedRowCount = _categoryRepository.Add(category);
+            _unitOfWork.CategoryRepository.Add(category);
+            int affectedRowCount = await _unitOfWork.SaveChangesToDB_StandartDb();
 
             return await CategoryResult.SuccessAsync($"Added {affectedRowCount} data.");
         }

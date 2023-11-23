@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Base;
 
-namespace RhythmicJourney.Persistence.Repositories.Concretes.Base;
+namespace RhythmicJourney.Persistence.Contracts.Repositories.Concretes.Base;
 
 /// <summary>
 /// Umumi funksionalliqlarin implementasiyalarini saxlayir.
@@ -20,14 +20,12 @@ public class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity> /* Gun
     private DbSet<TEntity> Table_TEntity => _dbContext.Set<TEntity>();
 
     #region IBaseRepository
-    public int Add(TEntity entity)
+    public void Add(TEntity entity)
     {
         Table_TEntity.Add(entity);
-
-        return _dbContext.SaveChanges();
     }
 
-    public int Edit(TEntity entity, Action<EntityEntry<TEntity>> rules = null)
+    public void Edit(TEntity entity, Action<EntityEntry<TEntity>> rules = null)
     {
         if (entity == null)
         {
@@ -47,15 +45,11 @@ public class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity> /* Gun
         }
 
         entry.State = EntityState.Modified;
-
-        return _dbContext.SaveChanges();
     }
 
-    public int Remove(TEntity entity)
+    public void Remove(TEntity entity)
     {
         Table_TEntity.Remove(entity);
-
-        return _dbContext.SaveChanges();
     }
     #endregion IBaseRepository
 }

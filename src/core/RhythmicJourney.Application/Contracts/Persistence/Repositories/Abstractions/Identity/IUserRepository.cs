@@ -9,7 +9,7 @@ namespace RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstrac
 /// </summary>
 public interface IUserRepository
 {
-    int Update(AppUser user);
+    void Update(AppUser user);
     Task<AppUser?> GetUserByIdAsync(int userId);
     Task<AppUser?> GetUserByEmailAsync(string email);
     Task<AppUser?> GetUserByRefreshTokenAsync(string refreshToken);

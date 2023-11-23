@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Features.Identity.Common;
 using RhythmicJourney.Application.Features.Identity.Queries;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 using RhythmicJourney.Application.Contracts.Infrastructure.Identity.Abstractions;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 
@@ -16,32 +16,31 @@ namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 /// </summary>
 public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResult>
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenGenerator _tokenGenerator;
-    private readonly IUserRepository _userRepository;
-    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    public LoginQueryHandler(ITokenGenerator tokenGenerator, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
+    public LoginQueryHandler(IUnitOfWork unitOfWork, ITokenGenerator tokenGenerator)
     {
+        this._unitOfWork = unitOfWork;
         this._tokenGenerator = tokenGenerator;
-        this._userRepository = userRepository;
-        this._refreshTokenRepository = refreshTokenRepository;
+
     }
 
     public async Task<AuthenticationResult> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
-        AppUser? userFromDb = await _userRepository.GetUserByEmailAsync(request.DTO.Email);
+        AppUser? userFromDb = await _unitOfWork.UserRepository.GetUserByEmailAsync(request.DTO.Email);
         {
             if (userFromDb is null)
             {
                 return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.USER_NOT_EXISTS } });
             }
 
-            if (!await _userRepository.IsPasswordValidAsync(userFromDb, request.DTO.Password))
+            if (!await _unitOfWork.UserRepository.IsPasswordValidAsync(userFromDb, request.DTO.Password))
             {
                 return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.INVALID_CREDENTIALS } });
             }
 
-            SignInResult result = await _userRepository.SignInAsync(request.DTO.Email, request.DTO.Password);
+            SignInResult result = await _unitOfWork.UserRepository.SignInAsync(request.DTO.Email, request.DTO.Password);
             {
                 if (!result.Succeeded)
                 {
@@ -71,7 +70,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResul
 
         { /* User ucun yeni bir Access ve Refresh Token generate edirik ve dondururuk cliente. Burada hemde generate etdiyimiz hemin bu Refresh Tokeni DB-ya qeyd edirik: */
             RefreshToken RT = _tokenGenerator.GenerateRefreshToken();
-            _refreshTokenRepository.Add(userFromDb, RT);
+            _unitOfWork.RefreshTokenRepository.Add(userFromDb, RT);
 
             string newAccessToken = await _tokenGenerator.GenerateAccessTokenAsync(userFromDb);
 

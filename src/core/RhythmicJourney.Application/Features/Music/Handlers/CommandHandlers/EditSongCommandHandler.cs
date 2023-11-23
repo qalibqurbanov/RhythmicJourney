@@ -9,7 +9,7 @@ using RhythmicJourney.Core.Entities.Music;
 using RhythmicJourney.Application.Extensions;
 using RhythmicJourney.Application.Features.Music.Common;
 using RhythmicJourney.Application.Features.Music.Commands;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Music.Handlers.CommandHandlers;
 
@@ -18,18 +18,18 @@ namespace RhythmicJourney.Application.Features.Music.Handlers.CommandHandlers;
 /// </summary>
 public class EditSongCommandHandler : IRequestHandler<EditSongCommand, SongResult>
 {
-    private readonly ISongRepository _songRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IHostingEnvironment _hostingEnvironment;
 
-    public EditSongCommandHandler(ISongRepository songRepository, IHostingEnvironment hostingEnvironment)
+    public EditSongCommandHandler(IUnitOfWork unitOfWork, IHostingEnvironment hostingEnvironment)
     {
-        this._songRepository = songRepository;
+        this._unitOfWork = unitOfWork;
         this._hostingEnvironment = hostingEnvironment;
     }
 
     public async Task<SongResult> Handle(EditSongCommand request, CancellationToken cancellationToken)
     {
-        Song song = _songRepository.GetSongs(song => song.Id == request.songIdentityDTO.SongID).FirstOrDefault();
+        Song song = _unitOfWork.SongRepository.GetSongs(song => song.Id == request.songIdentityDTO.SongID).FirstOrDefault();
         {
             if (song == null)
             {
@@ -61,7 +61,8 @@ public class EditSongCommandHandler : IRequestHandler<EditSongCommand, SongResul
         }
 
         {
-            int affectedRowCount = _songRepository.Edit(song);
+            _unitOfWork.SongRepository.Edit(song);
+            int affectedRowCount = await _unitOfWork.SaveChangesToDB_StandartDb();
 
             return await SongResult.SuccessAsync($"Updated {affectedRowCount} data.");
         }

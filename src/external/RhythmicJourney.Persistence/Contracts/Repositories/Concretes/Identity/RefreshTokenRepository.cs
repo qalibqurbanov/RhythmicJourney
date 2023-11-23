@@ -5,7 +5,7 @@ using RhythmicJourney.Persistence.Contexts;
 using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
 
-namespace RhythmicJourney.Persistence.Repositories.Concretes.Identity;
+namespace RhythmicJourney.Persistence.Contracts.Repositories.Concretes.Identity;
 
 /// <summary>
 /// Refresh Token ile elaqeli emeliyyatlarin implementasiyalarini saxlayir.
@@ -15,7 +15,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
     private readonly RhythmicJourneyIdentityDbContext _identityDbContext;
     public RefreshTokenRepository(RhythmicJourneyIdentityDbContext identityDbContext) => _identityDbContext = identityDbContext;
 
-    public int Add(AppUser user, RefreshToken refreshToken)
+    public void Add(AppUser user, RefreshToken refreshToken)
     {
         AppUser userFromDb = _identityDbContext.Users.FirstOrDefault(u => u.Id == user.Id);
 
@@ -23,11 +23,9 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         {
             userFromDb.RefreshTokens.Add(refreshToken);
         }
-
-        return _identityDbContext.SaveChanges();
     }
 
-    public int RevokeOldAndExpiredRefreshTokens(AppUser user, string refreshTokenToRevoke)
+    public void RevokeOldAndExpiredRefreshTokens(AppUser user, string refreshTokenToRevoke)
     {
         /* Ilk once uzerinde iw goreceyimiz useri elde edirik: */
         AppUser userFromDb = _identityDbContext.Users.FirstOrDefault(u => u.Id == user.Id);
@@ -50,11 +48,9 @@ public class RefreshTokenRepository : IRefreshTokenRepository
                 }
             }
         }
-
-        return _identityDbContext.SaveChanges();
     }
 
-    public int RevokeUsersAllRefreshTokens(int userID)
+    public void RevokeUsersAllRefreshTokens(int userID)
     {
         AppUser userFromDb = _identityDbContext.Users
             .Include(user => user.RefreshTokens)
@@ -68,7 +64,5 @@ public class RefreshTokenRepository : IRefreshTokenRepository
                 RT.RevokedOn = DateTime.UtcNow;
             }
         }
-
-        return _identityDbContext.SaveChanges();
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using RhythmicJourney.Core.Entities.Music;
 using RhythmicJourney.Application.Features.Music.Common;
 using RhythmicJourney.Application.Features.Music.Queries;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Music.Handlers.QueryHandlers;
 
@@ -17,12 +17,12 @@ namespace RhythmicJourney.Application.Features.Music.Handlers.QueryHandlers;
 /// </summary>
 public class GetSongsQueryHandler : IRequestHandler<GetSongsQuery, SongResult>
 {
-    private readonly ISongRepository _songRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetSongsQueryHandler(ISongRepository songRepository, IHttpContextAccessor httpContextAccessor)
+    public GetSongsQueryHandler(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
     {
-        this._songRepository = songRepository;
+        this._unitOfWork = unitOfWork;
         this._httpContextAccessor = httpContextAccessor;
     }
 
@@ -30,7 +30,7 @@ public class GetSongsQueryHandler : IRequestHandler<GetSongsQuery, SongResult>
     {
         int userID = int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue("UserID"));
         {
-            List<Song> songs = await _songRepository.GetSongs(song => song.UploaderID == userID).ToListAsync();
+            List<Song> songs = await _unitOfWork.SongRepository.GetSongs(song => song.UploaderID == userID).ToListAsync();
             {
                 if (songs.Count == 0)
                 {

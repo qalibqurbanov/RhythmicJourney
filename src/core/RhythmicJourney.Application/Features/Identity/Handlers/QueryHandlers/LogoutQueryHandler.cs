@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using RhythmicJourney.Application.Features.Identity.Queries;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 
@@ -13,15 +13,13 @@ namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 /// </summary>
 public class LogoutQueryHandler : IRequestHandler<LogoutQuery>
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IUserRepository _userRepository;
-    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    public LogoutQueryHandler(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
+    public LogoutQueryHandler(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
     {
+        this._unitOfWork = unitOfWork;
         this._httpContextAccessor = httpContextAccessor;
-        this._userRepository = userRepository;
-        this._refreshTokenRepository = refreshTokenRepository;
     }
 
     public async Task Handle(LogoutQuery request, CancellationToken cancellationToken)
@@ -32,8 +30,8 @@ public class LogoutQueryHandler : IRequestHandler<LogoutQuery>
         }
 
         {
-            _refreshTokenRepository.RevokeUsersAllRefreshTokens(userID);
-            await _userRepository.SignOutAsync();
+            _unitOfWork.RefreshTokenRepository.RevokeUsersAllRefreshTokens(userID);
+            await _unitOfWork.UserRepository.SignOutAsync();
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Features.Role.Common;
 using RhythmicJourney.Application.Features.Role.Commands;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Role.Handlers.CommandHandlers;
 
@@ -13,22 +13,23 @@ namespace RhythmicJourney.Application.Features.Role.Handlers.CommandHandlers;
 /// </summary>
 public class EditRoleCommandHandler : IRequestHandler<EditRoleCommand, RoleResult>
 {
-    private readonly IRoleRepository _roleRepository;
-    public EditRoleCommandHandler(IRoleRepository roleRepository) => this._roleRepository = roleRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    public EditRoleCommandHandler(IUnitOfWork unitOfWork) => this._unitOfWork = unitOfWork;
 
     public async Task<RoleResult> Handle(EditRoleCommand request, CancellationToken cancellationToken)
     {
-        bool isRoleExists = await _roleRepository.IsRoleExistsAsync(request.roleIdentityDTO.RoleID);
+        bool isRoleExists = await _unitOfWork.RoleRepository.IsRoleExistsAsync(request.roleIdentityDTO.RoleID);
         {
             if (isRoleExists)
             {
-                AppRole existingRole = _roleRepository.GetRoleById(request.roleIdentityDTO.RoleID);
+                AppRole existingRole = _unitOfWork.RoleRepository.GetRoleById(request.roleIdentityDTO.RoleID);
                 {
                     existingRole.Name = request.DTO.newRoleName;
                 }
 
                 {
-                    int affectedRowCount = _roleRepository.Edit(existingRole);
+                    _unitOfWork.RoleRepository.Edit(existingRole);
+                    int affectedRowCount = await _unitOfWork.SaveChangesToDB_IdentityDb();
 
                     return await RoleResult.SuccessAsync($"Updated {affectedRowCount} data.");
                 }

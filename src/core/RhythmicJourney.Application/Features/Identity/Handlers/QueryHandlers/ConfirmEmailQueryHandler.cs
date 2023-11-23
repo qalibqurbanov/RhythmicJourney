@@ -8,14 +8,14 @@ using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Extensions;
 using RhythmicJourney.Application.Features.Identity.Common;
 using RhythmicJourney.Application.Features.Identity.Queries;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.QueryHandlers;
 
 public class ConfirmEmailQueryHandler : IRequestHandler<ConfirmEmailQuery, AuthenticationResult>
 {
-    private readonly IUserRepository _userRepository;
-    public ConfirmEmailQueryHandler(IUserRepository userRepository) => this._userRepository = userRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    public ConfirmEmailQueryHandler(IUnitOfWork unitOfWork) => this._unitOfWork = unitOfWork;
 
     public async Task<AuthenticationResult> Handle(ConfirmEmailQuery request, CancellationToken cancellationToken)
     {
@@ -24,7 +24,7 @@ public class ConfirmEmailQueryHandler : IRequestHandler<ConfirmEmailQuery, Authe
             return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = RhythmicJourney.Core.Constants.IdentityConstants.EMAIL_CONFIRM_URL_INVALID } });
         }
 
-        AppUser? user = await _userRepository.GetUserByIdAsync(int.Parse(request.DTO.UserID));
+        AppUser? user = await _unitOfWork.UserRepository.GetUserByIdAsync(int.Parse(request.DTO.UserID));
         {
             if (user == null)
             {
@@ -35,7 +35,7 @@ public class ConfirmEmailQueryHandler : IRequestHandler<ConfirmEmailQuery, Authe
         // byte[] decodedBytesOfToken = WebEncoders.Base64UrlDecode(request.ConfirmationToken);
         // string token = Encoding.UTF8.GetString(decodedBytesOfToken);
 
-        IdentityResult result = await _userRepository.ConfirmEmailAsync(user, request.DTO.ConfirmationToken);
+        IdentityResult result = await _unitOfWork.UserRepository.ConfirmEmailAsync(user, request.DTO.ConfirmationToken);
         {
             if (result.Succeeded)
             {

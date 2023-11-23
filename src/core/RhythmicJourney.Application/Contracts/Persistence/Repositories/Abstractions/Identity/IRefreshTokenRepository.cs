@@ -7,7 +7,7 @@ namespace RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstrac
 /// </summary>
 public interface IRefreshTokenRepository
 {
-    int Add(AppUser user, RefreshToken refreshToken);
-    int RevokeOldAndExpiredRefreshTokens(AppUser user, string refreshTokenToRevoke);
-    int RevokeUsersAllRefreshTokens(int userID);
+    void Add(AppUser user, RefreshToken refreshToken);
+    void RevokeOldAndExpiredRefreshTokens(AppUser user, string refreshTokenToRevoke);
+    void RevokeUsersAllRefreshTokens(int userID);
 }

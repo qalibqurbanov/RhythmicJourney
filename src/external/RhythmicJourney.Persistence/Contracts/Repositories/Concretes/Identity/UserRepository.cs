@@ -6,7 +6,7 @@ using RhythmicJourney.Persistence.Contexts;
 using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
 
-namespace RhythmicJourney.Persistence.Repositories.Concretes.Identity;
+namespace RhythmicJourney.Persistence.Contracts.Repositories.Concretes.Identity;
 
 /// <summary>
 /// Istifadeciler ile elaqeli emeliyyatlarin implementasiyalarini saxlayir.
@@ -25,11 +25,9 @@ public class UserRepository : IUserRepository
     }
 
     #region IUserRepository
-    public int Update(AppUser user)
+    public void Update(AppUser user)
     {
         _identityDbContext.Users.Update(user);
-
-        return _identityDbContext.SaveChanges();
     }
 
     public async Task<AppUser?> GetUserByIdAsync(int userId)

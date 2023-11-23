@@ -7,7 +7,7 @@ using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Features.Identity.Common;
 using RhythmicJourney.Application.Features.Identity.Commands;
 using RhythmicJourney.Application.Contracts.Infrastructure.Email.Abstractions;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.CommandHandlers;
 
@@ -16,18 +16,18 @@ namespace RhythmicJourney.Application.Features.Identity.Handlers.CommandHandlers
 /// </summary>
 public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, AuthenticationResult>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IEmailSender _emailSender;
 
-    public ForgotPasswordCommandHandler(IEmailSender emailSender, IUserRepository userRepository)
+    public ForgotPasswordCommandHandler(IUnitOfWork unitOfWork, IEmailSender emailSender)
     {
-        this._userRepository = userRepository;
+        this._unitOfWork = unitOfWork;
         this._emailSender = emailSender;
     }
 
     public async Task<AuthenticationResult> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        AppUser? userFromDb = await _userRepository.GetUserByEmailAsync(request.DTO.Email);
+        AppUser? userFromDb = await _unitOfWork.UserRepository.GetUserByEmailAsync(request.DTO.Email);
         {
             if (userFromDb is null)
             {

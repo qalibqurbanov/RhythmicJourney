@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using RhythmicJourney.Application.Features.Category.Common;
 using RhythmicJourney.Application.Features.Category.Commands;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Category.Handlers.CommandHandlers;
 
@@ -12,31 +12,26 @@ namespace RhythmicJourney.Application.Features.Category.Handlers.CommandHandlers
 /// </summary>
 public class AddSongToCategoryCommandHandler : IRequestHandler<AddSongToCategoryCommand, CategoryResult>
 {
-    private readonly ICategoryRepository _categoryRepository;
-    private readonly ISongRepository _songRepository;
-
-    public AddSongToCategoryCommandHandler(ICategoryRepository categoryRepository, ISongRepository songRepository)
-    {
-        this._categoryRepository = categoryRepository;
-        this._songRepository = songRepository;
-    }
+    private readonly IUnitOfWork _unitOfWork;
+    public AddSongToCategoryCommandHandler(IUnitOfWork unitOfWork) => this._unitOfWork = unitOfWork;
 
     public async Task<CategoryResult> Handle(AddSongToCategoryCommand request, CancellationToken cancellationToken)
     {
         {
-            if (!_songRepository.IsSongExists(request.DTO.SongID))
+            if (!_unitOfWork.SongRepository.IsSongExists(request.DTO.SongID))
             {
                 return await CategoryResult.FailureAsync($"Song with ID {request.DTO.SongID} not exists.");
             }
 
-            if (!_categoryRepository.IsCategoryExists(request.DTO.CategoryID))
+            if (!_unitOfWork.CategoryRepository.IsCategoryExists(request.DTO.CategoryID))
             {
                 return await CategoryResult.FailureAsync($"Category with ID {request.DTO.CategoryID} not exists.");
             }
         }
 
         {
-            int affectedRowCount = _categoryRepository.AddSongToCategory(request.DTO.SongID, request.DTO.CategoryID);
+            _unitOfWork.CategoryRepository.AddSongToCategory(request.DTO.SongID, request.DTO.CategoryID);
+            int affectedRowCount = await _unitOfWork.SaveChangesToDB_StandartDb(); 
 
             return await CategoryResult.SuccessAsync($"Updated {affectedRowCount} data.");
         }

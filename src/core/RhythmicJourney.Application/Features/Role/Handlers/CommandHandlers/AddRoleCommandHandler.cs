@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Features.Role.Common;
 using RhythmicJourney.Application.Features.Role.Commands;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Role.Handlers.CommandHandlers;
 
@@ -13,12 +13,12 @@ namespace RhythmicJourney.Application.Features.Role.Handlers.CommandHandlers;
 /// </summary>
 public class AddRoleCommandHandler : IRequestHandler<AddRoleCommand, RoleResult>
 {
-    private readonly IRoleRepository _roleRepository;
-    public AddRoleCommandHandler(IRoleRepository roleRepository) => this._roleRepository = roleRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    public AddRoleCommandHandler(IUnitOfWork unitOfWork) => this._unitOfWork = unitOfWork;
 
     public async Task<RoleResult> Handle(AddRoleCommand request, CancellationToken cancellationToken)
     {
-        bool isRoleExists = await _roleRepository.IsRoleExistsAsync(request.DTO.RoleName);
+        bool isRoleExists = await _unitOfWork.RoleRepository.IsRoleExistsAsync(request.DTO.RoleName);
         {
             if (isRoleExists)
             {
@@ -33,7 +33,8 @@ public class AddRoleCommandHandler : IRequestHandler<AddRoleCommand, RoleResult>
                 };
 
                 {
-                    int affectedRowCount = _roleRepository.Add(newRole);
+                    _unitOfWork.RoleRepository.Add(newRole);
+                    int affectedRowCount = await _unitOfWork.SaveChangesToDB_IdentityDb();
 
                     return await RoleResult.SuccessAsync($"Added {affectedRowCount} data.");
                 }

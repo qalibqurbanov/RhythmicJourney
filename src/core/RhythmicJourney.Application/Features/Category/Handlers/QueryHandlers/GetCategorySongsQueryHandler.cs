@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using RhythmicJourney.Core.Entities.Music;
 using RhythmicJourney.Application.Features.Category.Common;
 using RhythmicJourney.Application.Features.Category.Queries;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Music;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Category.Handlers.QueryHandlers;
 
@@ -15,12 +15,12 @@ namespace RhythmicJourney.Application.Features.Category.Handlers.QueryHandlers;
 /// </summary>
 public class GetCategorySongsQueryHandler : IRequestHandler<GetCategorySongsQuery, CategoryResult>
 {
-    private readonly ICategoryRepository _categoryRepository;
-    public GetCategorySongsQueryHandler(ICategoryRepository categoryRepository) => this._categoryRepository = categoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    public GetCategorySongsQueryHandler(IUnitOfWork unitOfWork) => this._unitOfWork = unitOfWork;
 
     public async Task<CategoryResult> Handle(GetCategorySongsQuery request, CancellationToken cancellationToken)
     {
-        List<Song> songs = _categoryRepository.GetSongsByCategory(request.DTO.CategoryID).ToList();
+        List<Song> songs = _unitOfWork.CategoryRepository.GetSongsByCategory(request.DTO.CategoryID).ToList();
         {
             if (songs.Count == 0)
             {

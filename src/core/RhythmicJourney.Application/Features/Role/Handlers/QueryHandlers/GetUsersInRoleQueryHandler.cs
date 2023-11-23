@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Features.Role.Common;
 using RhythmicJourney.Application.Features.Role.Queries;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Role.Handlers.QueryHandlers;
 
@@ -14,18 +14,18 @@ namespace RhythmicJourney.Application.Features.Role.Handlers.QueryHandlers;
 /// </summary>
 public class GetUsersInRoleQueryHandler : IRequestHandler<GetUsersInRoleQuery, RoleResult>
 {
-    private readonly IRoleRepository _roleRepository;
-    public GetUsersInRoleQueryHandler(IRoleRepository roleRepository) => this._roleRepository = roleRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    public GetUsersInRoleQueryHandler(IUnitOfWork unitOfWork) => this._unitOfWork = unitOfWork;
 
     public async Task<RoleResult> Handle(GetUsersInRoleQuery request, CancellationToken cancellationToken)
     {
-        bool isRoleExists = await _roleRepository.IsRoleExistsAsync(request.DTO.RoleID);
+        bool isRoleExists = await _unitOfWork.RoleRepository.IsRoleExistsAsync(request.DTO.RoleID);
         {
             if (isRoleExists)
             {
-                AppRole role = _roleRepository.GetRoleById(request.DTO.RoleID);
+                AppRole role = _unitOfWork.RoleRepository.GetRoleById(request.DTO.RoleID);
                 {
-                    List<AppUser> users = await _roleRepository.GetUsersInRoleAsync(role.Name);
+                    List<AppUser> users = await _unitOfWork.RoleRepository.GetUsersInRoleAsync(role.Name);
                     {
                         if (users.Count == 0)
                         {

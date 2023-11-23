@@ -9,8 +9,8 @@ using RhythmicJourney.Application.Extensions;
 using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Features.Identity.Common;
 using RhythmicJourney.Application.Features.Identity.Commands;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 using RhythmicJourney.Application.Contracts.Infrastructure.Identity.Abstractions;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
 
 namespace RhythmicJourney.Application.Features.Identity.Handlers.CommandHandlers;
 
@@ -19,17 +19,15 @@ namespace RhythmicJourney.Application.Features.Identity.Handlers.CommandHandlers
 /// </summary>
 public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, AuthenticationResult>
 {
-    private readonly IRefreshTokenValidator _refreshTokenValidator;
-    private readonly IUserRepository _userRepository;
-    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenGenerator _tokenGenerator;
-
-    public RenewTokensCommandHandler(IRefreshTokenValidator refreshTokenValidator, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, ITokenGenerator tokenGenerator)
+    private readonly IRefreshTokenValidator _refreshTokenValidator;
+    
+    public RenewTokensCommandHandler(IUnitOfWork unitOfWork, ITokenGenerator tokenGenerator, IRefreshTokenValidator refreshTokenValidator)
     {
-        this._refreshTokenValidator = refreshTokenValidator;
-        this._userRepository = userRepository;
+        this._unitOfWork = unitOfWork;
         this._tokenGenerator = tokenGenerator;
-        this._refreshTokenRepository = refreshTokenRepository;
+        this._refreshTokenValidator = refreshTokenValidator;
     }
 
     public async Task<AuthenticationResult> Handle(RenewTokensCommand request, CancellationToken cancellationToken)
@@ -55,7 +53,7 @@ public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, Aut
             return await AuthenticationResult.FailureAsync(new List<IdentityError>() { new IdentityError() { Description = Core.Constants.IdentityConstants.REFRESH_TOKEN_INVALID } });
         }
 
-        AppUser? userFromDb = await _userRepository.GetUserByRefreshTokenAsync(request.DTO.RefreshToken);
+        AppUser? userFromDb = await _unitOfWork.UserRepository.GetUserByRefreshTokenAsync(request.DTO.RefreshToken);
         {
             if (userFromDb == null)
             {
@@ -78,10 +76,10 @@ public class RenewTokensCommandHandler : IRequestHandler<RenewTokensCommand, Aut
                         }
 
                         { /* Ilk once userin hazirki Refresh Tokenini revoke edirik, ardinca ise Usere yeni bir Access ve Refresh Token generate ederek DB-ya qeyd edirik, ardinca ise dondururuk cliente. */
-                            _refreshTokenRepository.RevokeOldAndExpiredRefreshTokens(userFromDb, request.DTO.RefreshToken);
+                            _unitOfWork.RefreshTokenRepository.RevokeOldAndExpiredRefreshTokens(userFromDb, request.DTO.RefreshToken);
 
                             RefreshToken RT = _tokenGenerator.GenerateRefreshToken();
-                            _refreshTokenRepository.Add(userFromDb, RT);
+                            _unitOfWork.RefreshTokenRepository.Add(userFromDb, RT);
 
                             string newAccessToken = await _tokenGenerator.GenerateAccessTokenAsync(userFromDb);
 

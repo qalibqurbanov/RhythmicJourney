@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using RhythmicJourney.Core.Entities.Identity;
 using RhythmicJourney.Application.Features.Role.Common;
 using RhythmicJourney.Application.Features.Role.Queries;
-using RhythmicJourney.Application.Contracts.Persistence.Repositories.Abstractions.Identity;
+using RhythmicJourney.Application.Contracts.Persistence.UnitOfWork.Abstractions;
 
 namespace RhythmicJourney.Application.Features.Role.Handlers.QueryHandlers;
 
@@ -15,12 +15,12 @@ namespace RhythmicJourney.Application.Features.Role.Handlers.QueryHandlers;
 /// </summary>
 public class GetRolesQueryHandler : IRequestHandler<GetRolesQuery, RoleResult>
 {
-    private readonly IRoleRepository _roleRepository;
-    public GetRolesQueryHandler(IRoleRepository roleRepository) => this._roleRepository = roleRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    public GetRolesQueryHandler(IUnitOfWork unitOfWork) => this._unitOfWork = unitOfWork;
 
     public async Task<RoleResult> Handle(GetRolesQuery request, CancellationToken cancellationToken)
     {
-        List<AppRole> roles = _roleRepository.GetRoles().ToList();
+        List<AppRole> roles = _unitOfWork.RoleRepository.GetRoles().ToList();
         {
             if (roles.Count == 0)
             {
